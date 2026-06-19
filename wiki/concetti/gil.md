@@ -30,7 +30,24 @@ CPython gestisce la memoria con reference counting. Senza un lock globale, due t
 - **`concurrent.futures.ProcessPoolExecutor`**: astrazione su multiprocessing
 - Estensioni C (NumPy, SciPy) rilasciano il GIL internamente → parallelismo per operazioni numeriche
 
-> 🎯 Esame: "Cos'è il GIL? Per quali workload il threading Python è utile nonostante il GIL?"
+**Vantaggi del GIL** (perché esiste ed è rimasto):
+- Permette di rendere facilmente multi-threaded l'interprete CPython, **a scapito del parallelismo**
+- Dovendo gestire un solo lock, **migliora le performance degli applicativi single-thread**
+- Le **librerie C non thread-safe** possono essere integrate facilmente
+
+**Svantaggi del GIL**:
+- Riduce il livello di parallelismo ottenibile su macchine multiprocessore
+- A parità di workload **CPU-bound, un'applicazione multithreaded sarà più lenta di una multiprocess**
+- Impatta principalmente i task CPU-bound; viene rilasciato per i task I/O-bound
+
+**Il GIL oggi** (slide aggiornate):
+- In **CPython vanilla** non è possibile disabilitare il GIL a runtime
+- In **Python 3.13** esiste una build *free-threaded* in cui il GIL è disabilitato
+- Da **Python 3.14** questa build è supportata ufficialmente, **ma resta opzionale** (non default)
+- Si ottiene compilando l'interprete con l'opzione `--disable-gil`
+- I tentativi passati di rimuovere il GIL fallirono per: calo di performance single-thread, aumento di complessità dell'interprete, necessità di modificare tutte le estensioni C che sfruttano il GIL
+
+> 🎯 Esame: "Cos'è il GIL? Per quali workload il threading Python è utile nonostante il GIL? Perché un'app CPU-bound multithread è più lenta della stessa multiprocess?"
 
 ## Perché importa
 
@@ -41,6 +58,7 @@ Il GIL è la ragione principale per cui il threading Python non scala su CPU-bou
 - [[threading]] — soggetto al GIL
 - [[multiprocessing]] — aggiramento del GIL
 - [[interprete-python]] — il GIL è specifico di CPython
+- [[concorrenza-parallelismo]] — il GIL fa sì che il threading Python dia concorrenza ma non parallelismo
 
 ## Fonti
 
@@ -48,3 +66,4 @@ Il GIL è la ragione principale per cui il threading Python non scala su CPU-bou
 - [[11-python-concurrency]]
 
 _Aggiornato: 2026-06-04 — ingest iniziale_
+_Aggiornato: 2026-06-19 — vantaggi/svantaggi GIL, "GIL oggi" (build free-threaded 3.13/3.14, --disable-gil), confronto multithread vs multiprocess CPU-bound, da slide 11_

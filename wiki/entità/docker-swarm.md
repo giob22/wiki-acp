@@ -19,10 +19,7 @@ Un nodo può essere contemporaneamente manager e worker.
 
 ### Algoritmo di consenso Raft
 
-I nodi manager implementano l'**algoritmo di consenso Raft** per gestire lo stato globale del cluster in modo distribuito:
-- Tollera fino a **(N-1)/2 fallimenti** di manager
-- Richiede un **quorum** di (N/2)+1 membri per accordarsi sui valori
-- Se il manager di uno swarm a singolo nodo si guasta, i servizi **continuano a funzionare**, ma è necessario creare un nuovo cluster per ripristinare il controllo
+I nodi manager implementano l'**algoritmo di consenso Raft** per gestire lo stato globale del cluster in modo distribuito. I dettagli su quorum, fallimenti tollerati e comportamento in caso di guasto sono nella sezione [[#Tolleranza ai guasti]].
 
 ```
 Raft consensus group
@@ -34,6 +31,43 @@ Raft consensus group
 Worker  Worker  Worker  Worker  Worker  Worker  Worker
                 (Gossip network)
 ```
+
+## Tolleranza ai guasti
+
+In uno swarm esistono **due tipi di guasto distinti**, gestiti da meccanismi diversi. Confonderli è l'errore tipico.
+
+### Guasto dei manager → quorum Raft
+
+I manager mantengono lo **stato del cluster** (leader corrente, servizi, repliche desiderate, placement). Essendo più di uno, devono restare d'accordo su quale sia lo stato: lo fanno con l'algoritmo di consenso **Raft**, che accetta una scrittura sullo stato solo se la **maggioranza** dei manager è d'accordo (**quorum**).
+
+- Quorum richiesto = **(N/2)+1** manager vivi
+- Fallimenti tollerati = **(N-1)/2**
+
+| N manager | Quorum | Fallimenti tollerati |
+|-----------|--------|----------------------|
+| 1         | 1      | 0                    |
+| 3         | 2      | 1                    |
+| 5         | 3      | 2                    |
+| 7         | 4      | 3                    |
+
+La maggioranza serve a evitare lo **split-brain**: se il cluster si spezzasse in due gruppi, solo quello che possiede più della metà dei manager può agire; l'altro si blocca, impedendo decisioni contraddittorie.
+
+**Se si perde il quorum** (es. 3 manager, ne muoiono 2):
+- Il cluster **non può più orchestrare**: niente nuovi servizi, reschedule, scaling o join di nodi.
+- I container **già in esecuzione continuano a funzionare**: si ferma il piano di controllo (il "cervello"), non il piano dati.
+- Recupero: riportare online abbastanza manager da ricostituire il quorum.
+
+Caso limite (swarm a singolo manager che si guasta): i servizi continuano a girare, ma il controllo è perso ed è necessario **creare un nuovo cluster** per ripristinarlo.
+
+> 🎯 Esame: i manager si tengono sempre in numero **dispari** (3, 5, 7). Passare da 3 a 4 non aumenta la tolleranza (resta 1 fallimento), aggiunge solo un nodo da coordinare.
+
+### Guasto dei worker → reschedule
+
+Meccanismo **completamente diverso**: i worker non partecipano a Raft e non votano nulla. Ricevono ed eseguono i task assegnati dai manager.
+
+Quando un worker si guasta, i manager rilevano che lo stato desiderato non è più rispettato (mancano repliche) e **ripianificano i task** sui nodi ancora disponibili. Poiché un task, una volta assegnato a un nodo, **non migra** (vedi [[#Task]]), non viene spostato ma ne viene **creato uno nuovo** altrove finché non si torna al numero di repliche richiesto.
+
+> 💡 Connessione: quorum/Raft protegge la sopravvivenza del **controllo** del cluster (riguarda solo i manager); il reschedule protegge la sopravvivenza dei **servizi** (riguarda i worker). Un nodo che è insieme manager e worker è soggetto a entrambe le logiche.
 
 ## Servizi, Task e Placement
 
@@ -125,3 +159,4 @@ Le richieste GET verso il nodo manager vengono **bilanciate** automaticamente tr
 - [[03-service-deployment-containers]]
 
 _Aggiornato: 2026-06-12 — ingest iniziale_
+_Aggiornato: 2026-06-19 — nuova sezione "Tolleranza ai guasti": consolidato quorum Raft (manager) vs reschedule (worker), su domanda dell'utente_

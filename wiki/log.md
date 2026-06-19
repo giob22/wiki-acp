@@ -67,3 +67,7 @@ Filtra ultimi 10: `grep "^## " wiki/log.md | tail -10`
 ## [2026-06-16] prova | sim-09 — Java puro: gRPC client/server + JMS producer/consumer asincrono (no Python)
 
 ## [2026-06-18] prova-simulata | 2026-06-18-sim-11 — bike-sharing (Python proxy-skeleton Socket TCP + skeleton ereditarietà, produttore/consumatore lista size 5, Flask + MongoDB) — testo senza soluzione
+
+## [2026-06-19] update | docker-swarm: nuova sezione "Tolleranza ai guasti" — distinzione quorum Raft (manager) vs reschedule task (worker)
+
+## [2026-06-19] estensione | MODULO 1 Concorrenza — riletto slide 10+11 (richiami concorrente + Python concurrency). Estese processo-thread (scheduler/context-switch 3 procedure/ULT-KLT/vantaggi), gil (vantaggi-svantaggi/GIL oggi 3.13-3.14), threading (Lock/RLock/Condition/Semaphore/Event/daemon/thread-local completi), multiprocessing (spawn-fork-forkserver/Pipe/Queue/Shared Memory). Create 4 nuove pagine: concorrenza-parallelismo (Amdahl), semaforo, monitor, produttore-consumatore. Aggiornato index.

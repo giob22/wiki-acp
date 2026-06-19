@@ -25,11 +25,15 @@
 - [[ereditarieta]] — super(), polimorfismo, ABC, isinstance
 
 ### Concorrenza
-- [[processo-thread]] — programma vs processo, PCB, context switch, ULT/KLT
-- [[gil]] — Global Interpreter Lock, implicazioni, workaround
-- [[threading]] — Thread, Lock, daemon, RLock, Event, Semaphore
-- [[multiprocessing]] — Process, Pool, ProcessPoolExecutor, IPC
+- [[concorrenza-parallelismo]] — concorrenza vs parallelismo, multitasking/multithreading, speed-up, legge di Amdahl, competizione/cooperazione/interferenza
+- [[processo-thread]] — programma vs processo, PCB, scheduler BT, context switch (3 procedure), ULT/KLT, vantaggi thread
+- [[gil]] — Global Interpreter Lock, vantaggi/svantaggi, GIL oggi (free-threaded 3.13/3.14), workaround
+- [[threading]] — Thread, Lock, RLock, Condition, Semaphore, Event, daemon, thread-local
+- [[multiprocessing]] — Process, start method (spawn/fork/forkserver), Pipe, Queue, Shared Memory, Pool
 - [[asyncio]] — event loop, coroutine, async/await, alternativa single-thread per I/O-bound
+- [[semaforo]] — TDA semaforo, wait/signal, mutex, sezione critica, safety/liveness, deadlock/starvation
+- [[monitor]] — costrutto monitor, variabili condition, semantica signal (signal-and-wait/Hoare/signal-and-continue)
+- [[produttore-consumatore]] — problema di cooperazione, vincoli, soluzioni; lettori/scrittori
 
 ### Networking
 - [[socket]] — socket, TCP vs UDP, OSI, client/server TCP
