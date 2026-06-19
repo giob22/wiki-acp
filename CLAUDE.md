@@ -140,14 +140,14 @@ Sezioni: cos'è, come si usa nel corso, link ai concetti correlati, fonti.
 
 ## Convenzioni
 
-| Marcatore | Uso |
-|-----------|-----|
-| `[[nome-pagina]]` | Link interno stile Obsidian — usalo sempre |
-| `> ⚠️ Contraddizione:` | Nuova fonte contraddice quanto già nel wiki |
-| `> 🎯 Esame:` | Questo punto è rilevante per l'esame |
-| `> 💡 Connessione:` | Collegamento non ovvio con un altro concetto |
-| `TODO: da espandere` | Placeholder per pagina incompleta |
-| `_Aggiornato: [data] — [motivo]_` | In fondo a ogni pagina modificata |
+| Marcatore                         | Uso                                          |
+| --------------------------------- | -------------------------------------------- |
+| `[[nome-pagina]]`                 | Link interno stile Obsidian — usalo sempre   |
+| `> ⚠️ Contraddizione:`            | Nuova fonte contraddice quanto già nel wiki  |
+| `> 🎯 Esame:`                     | Questo punto è rilevante per l'esame         |
+| `> 💡 Connessione:`               | Collegamento non ovvio con un altro concetto |
+| `TODO: da espandere`              | Placeholder per pagina incompleta            |
+| `_Aggiornato: [data] — [motivo]_` | In fondo a ogni pagina modificata            |
 
 **Regole rigide:**
 - `raw/` non si tocca mai

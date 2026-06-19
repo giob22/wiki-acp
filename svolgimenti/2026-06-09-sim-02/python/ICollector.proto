@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package collector;
+
+service ICollector{
+    rpc SendMeasurement (Measurement) returns (Ack); 
+}
+
+message Measurement{
+    string device_id = 1;
+    float value = 2;
+}
+
+message Ack{
+    string status = 1; 
+}

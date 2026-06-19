@@ -1,0 +1,13 @@
+meter-2|84.24
+meter-3|89.66
+meter-2|72.77
+meter-2|59.59
+meter-2|50.56
+meter-2|74.22
+meter-1|97.18
+meter-3|98.18
+meter-2|61.72
+meter-0|58.64
+meter-2|82.27
+meter-1|88.99
+meter-1|57.65

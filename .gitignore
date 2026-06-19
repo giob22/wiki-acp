@@ -2,3 +2,6 @@
 .obsidian/workspace.json
 .DS_Store
 output/
+/raw/
+.trash/
+

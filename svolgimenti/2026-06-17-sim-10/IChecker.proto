@@ -1,0 +1,22 @@
+syntax="proto3";
+
+package I_checker;
+
+service IChecker{
+    rpc stream_temp (stream Temperature) returns (Ack);
+    rpc get_average (Empty) returns (Average);
+}
+
+message Temperature{
+    int64 temperature = 1;
+}
+
+message Ack{
+    string status = 1;
+}
+
+message Empty {}
+
+message Average {
+    float avg = 1;
+}

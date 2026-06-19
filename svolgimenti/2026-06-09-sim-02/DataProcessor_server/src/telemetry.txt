@@ -1,0 +1,4 @@
+sensor-C|80.0
+sensor-B|99.8
+sensor-B|91.9
+sensor-B|81.7
