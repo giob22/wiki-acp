@@ -36,20 +36,21 @@
 - [[produttore-consumatore]] — problema di cooperazione, vincoli, soluzioni; lettori/scrittori
 
 ### Networking
-- [[socket]] — socket, TCP vs UDP, OSI, client/server TCP
+- [[socket]] — Internet/OSI/IP datagram best-effort, TCP vs UDP, socket family/type+funzioni (porta 0, localhost/0.0.0.0), send/recv vs sendto/recvfrom, n° socket (TCP 3/UDP 2), server multithread/multiprocess (socket non thread-safe), utility Linux
 
 ### Middleware
-- [[rpc]] — Remote Procedure Call, IDL, stub, skeleton, marshalling
-- [[protocol-buffers]] — .proto, message, field tag, sintassi proto3
-- [[grpc]] — HTTP/2, workflow 4 passi, _pb2.py, _pb2_grpc.py
-- [[mom]] — Message Broker, store-and-forward, disaccoppiamento spaziale/temporale
-- [[pub-sub]] — PTP vs Pub-Sub, Observer, Notification Service, AMQP/MQTT/STOMP
-- [[sottoscrizioni-durabili]] — durable subscription, client-id + subscription name, STOMP/JMS, disaccoppiamento temporale sui topic
+- [[middleware]] — sistemi distribuiti, eterogeneità, EAI, glue technologies, 7 trasparenze, tassonomia (RDA/TP/RPC/MOM/TS/DOM/CM/WS), DOM/ORB/IDL/Java RMI
+- [[rpc]] — Remote Procedure Call, stub/skeleton, marshalling+external data rep, semantica (4 tipi), Sun RPC (port mapper/binding dinamico/dispatcher)
+- [[protocol-buffers]] — .proto, message, field tag, proto3, modello Proxy-Skeleton, package
+- [[grpc]] — HTTP/2 (stream/message/frame), workflow 4 passi, _pb2/_pb2_grpc, 4 tipi RPC (streaming+generator), thread-safety, errori, limitazioni
+- [[mom]] — comunicazione indiretta (4 forme), Message Broker, store-and-forward, disaccoppiamento spaziale/temporale, Observer→Notification Service, AMQP/MQTT/STOMP
+- [[pub-sub]] — PTP vs Pub-Sub (ack/0..N subscriber), Observer 3 passi, Notification Service, Queue/Topic
+- [[sottoscrizioni-durabili]] — durable subscription, client-id (=hostname default) + subscription name + persistent, STOMP/JMS, disaccoppiamento temporale sui topic
 - [[middleware-trasparenza]] — specifica vs implementazione, IDL/Abstract Factory/STOMP, JMS vs gRPC vs ActiveMQ
 
 ### Web Services e NoSQL
-- [[rest]] — risorsa, URI, interfaccia uniforme, safe/idempotente, stateless
-- [[nosql]] — SQL vs NoSQL, ACID, tipologie (key-value, document, graph...)
+- [[rest]] — Web Service (W3C), risorsa/URI/interfaccia uniforme, safe/idempotente, stateless, entity-body, RPC vs REST, HTML/DOM, OpenAPI/Swagger
+- [[nosql]] — Database/DBMS+features, back-end web, relazionali (schema/keys/entità/ACID) vs NoSQL (schema-free/orizzontale/BASE), tipologie (key-value/document/graph...)
 - [[gestione-errori-api]] — eccezioni PyMongo↔status HTTP, abort/errorhandler Flask, gRPC context/StatusCode
 
 ### Container e Deployment
@@ -61,9 +62,9 @@
 
 ## Entità
 
-- [[flask]] — micro-framework Python per REST API web
+- [[flask]] — microframework WSGI (Werkzeug+Jinja2) per REST API: routes/view function, dynamic routes, request/response, templating, server multi-thread, requests lib, curl
 - [[mongodb]] — document-store NoSQL + PyMongo driver
-- [[activemq]] — Apache ActiveMQ broker MOM + STOMP Python
+- [[activemq]] — Apache ActiveMQ broker MOM multiprotocollo + STOMP Python (frame, transazioni, API stomp.py)
 - [[grpc-python]] — binding Python gRPC (grpcio, grpcio-tools)
 - [[grpc-java]] — binding Java gRPC (io.grpc, protoc-gen-grpc-java, JAR deps)
 - [[docker]] — Docker Engine (daemon/containerd/runc), immagini OverlayFS, Dockerfile, CLI

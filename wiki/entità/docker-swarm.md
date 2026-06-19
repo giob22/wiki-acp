@@ -104,10 +104,12 @@ Swarm fornisce meccanismi per controllare **dove** vengono schedulati i task:
 
 ## Service Update
 
-Swarm supporta aggiornamenti **online** della configurazione di rete e dei volumi legati a un servizio:
+Swarm supporta aggiornamenti **online** della configurazione (di rete, dei volumi, dell'immagine) legata a un servizio:
 - Avvia nuovi container con la nuova configurazione
 - Arresta automaticamente i container con la vecchia configurazione
 - Gestisce **rollback** automatici in caso di fallimento
+
+È il meccanismo del **rolling update**: aggiornando le repliche un po' alla volta, il servizio resta disponibile durante l'aggiornamento; in caso di problemi si torna alla configurazione precedente con rollback. Più in generale Swarm lavora per **reconciliation**: confronta di continuo lo stato reale con lo stato desiderato dichiarato e agisce per riallinearli (`verify: Service converged` è il lessico di questo stato — la realtà ha raggiunto la dichiarazione).
 
 ## Comandi principali
 
@@ -116,6 +118,7 @@ Swarm supporta aggiornamenti **online** della configurazione di rete e dei volum
 docker swarm init --advertise-addr IP_NODO_MASTER
 
 # Join allo swarm (sui nodi worker, con il comando generato da swarm init)
+# la porta 2377 è quella di gestione del cluster
 docker swarm join --token TOKEN_GENERATO IP_NODO_MASTER:2377
 
 # Creazione di un servizio replicato
@@ -129,8 +132,8 @@ docker service rm mio_servizio
 docker stack deploy --compose-file=compose.yaml nome_stack
 docker stack rm nome_stack
 
-# Gestione disponibilità nodi
-docker node update --availability drain IP_HOST    # simula nodo non disponibile
+# Gestione disponibilità nodi (drain = anche procedura standard di manutenzione pianificata)
+docker node update --availability drain IP_HOST    # svuota il nodo (simula guasto / manutenzione)
 docker node update --availability active IP_HOST   # riattiva il nodo
 
 # Uscire dallo swarm
@@ -146,7 +149,9 @@ docker service create --replicas 3 \
   flask_image_hello_world
 ```
 
-Le richieste GET verso il nodo manager vengono **bilanciate** automaticamente tra tutti i container in esecuzione. Ad ogni GET risponde uno dei 3 container, garantendo sia la distribuzione del carico (load balancing) sia l'**availability** del servizio in caso di guasto di uno dei nodi.
+Le richieste GET verso il nodo manager vengono **bilanciate** automaticamente tra tutti i container in esecuzione. Ad ogni GET risponde uno dei 3 container, garantendo sia la distribuzione del carico (load balancing) sia l'**availability** del servizio in caso di guasto di uno dei nodi. Poiché ogni replica stampa il proprio `socket.gethostname()` (= ID del container), il round-robin diventa visibile come risposte da hostname diversi.
+
+> 💡 Il meccanismo sottostante è l'**ingress routing mesh**: la porta pubblicata è aperta su **tutti** i nodi dello swarm, e qualunque nodo riceva la richiesta la inoltra (via **IPVS**, IP Virtual Server) a una replica qualsiasi, anche su un altro nodo. Per questo si può colpire un nodo qualsiasi e ottenere comunque il bilanciamento.
 
 ## Connessioni
 
@@ -160,3 +165,4 @@ Le richieste GET verso il nodo manager vengono **bilanciate** automaticamente tr
 
 _Aggiornato: 2026-06-12 — ingest iniziale_
 _Aggiornato: 2026-06-19 — nuova sezione "Tolleranza ai guasti": consolidato quorum Raft (manager) vs reschedule (worker), su domanda dell'utente_
+_Aggiornato: 2026-06-20 — MODULO 4 (appunti): ingress routing mesh + IPVS (meccanismo load balancing), rolling update + reconciliation/"Service converged", porta 2377, drain anche per manutenzione_

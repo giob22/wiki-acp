@@ -14,13 +14,15 @@ Nel modello Publish-Subscribe standard, un subscriber su `/topic/...` riceve un 
 
 La sottoscrizione durabile risolve questo: il broker tiene traccia del subscriber tramite un'**identità stabile** e accumula per lui i messaggi mentre è offline.
 
+Di default in ActiveMQ un subscriber riceve i messaggi **solo se pubblicati quando esso è attivo**: il metodo `subscribe` crea di default un subscriber **non-durable**.
+
 **Identità stabile = due elementi:**
-1. **`client-id`** — identificativo univoco del client (sul CONNECT)
-2. **subscription name** — nome della sottoscrizione (sul SUBSCRIBE)
+1. **`client-id`** — identificativo univoco del client (sul CONNECT). ⚠️ Se non impostato esplicitamente, in ActiveMQ il `client-id` viene impostato con l'**hostname** della macchina.
+2. **subscription name** (`activemq.subscriptionName`) — nome della sottoscrizione (sul SUBSCRIBE)
 
-La coppia `(client-id, subscription-name)` dice al broker "sono lo stesso subscriber di prima" → riprende da dove era rimasto.
+La coppia `(client-id, activemq.subscriptionName)` identifica univocamente la sottoscrizione → dice al broker "sono lo stesso subscriber di prima" → riprende da dove era rimasto.
 
-**Requisito**: i messaggi devono essere **persistent** (default in ActiveMQ con KahaDB) per sopravvivere anche a un riavvio del broker.
+**Requisito**: i messaggi devono essere **persistent** (`persistent=True` sul subscribe; default in ActiveMQ con KahaDB) per sopravvivere anche a un riavvio del broker.
 
 ### STOMP — Python (`stomp.py`)
 
@@ -32,13 +34,17 @@ conn.set_listener("", MyListener())
 conn.connect(wait=True, headers={"client-id": "archive-client"})
 
 # activemq.subscriptionName = header ActiveMQ-specifico per la durabilità
+# persistent=True → messaggi persistenti (sopravvivono al restart del broker)
 conn.subscribe(
     destination="/topic/checks",
     id=1,
     ack="auto",
+    persistent=True,
     headers={"activemq.subscriptionName": "archive-sub"},
 )
 ```
+
+> Esempio dalle slide: `conn.connect(wait=True, headers={"client-id":"IDtestsub_durable"})` e `conn.subscribe(destination='/topic/mytesttopic', id=1, ack='auto', persistent=True, headers={"activemq.subscriptionName":"DURABLESUB_NAME"})`.
 
 - `client-id` → header del **CONNECT**
 - `activemq.subscriptionName` → header del **SUBSCRIBE** (STOMP 1.2 standard userebbe `durable-subscription-name`)
@@ -84,7 +90,10 @@ session.unsubscribe("archive-sub"); // rimuove definitivamente la durable
 
 ## Fonti
 
-- [[15-python-mom]] / [[24-java-jms]] — base MOM/pub-sub/JMS
-- Approfondimento esterno (STOMP 1.2 + ActiveMQ docs): le durable subscription **non compaiono esplicitamente nelle slide del corso** — aggiunte per colmare un gap di copertura
+- [[15-python-mom]] — slide 32 "STOMP: Subscriber Durabili": `client-id` + `activemq.subscriptionName` in combinazione (come i durable JMS); `client-id` = hostname se non impostato; `persistent=True`
+- [[24-java-jms]] — controparte Java (`setClientID` + `createDurableSubscriber`)
 
-_Aggiornato: 2026-06-15 — creazione (gap segnalato dall'utente; non presente nelle slide raw)_
+> ⚠️ Correzione: una versione precedente di questa pagina annotava che le durable subscription "non compaiono nelle slide". In realtà sono trattate nella slide 15 (p.32). La nota è stata rimossa.
+
+_Aggiornato: 2026-06-15 — creazione (su richiesta utente)_
+_Aggiornato: 2026-06-19 — estensione MODULO 3 (slide 15 p.32): allineata alle slide (subscribe non-durable di default, client-id=hostname se non impostato, persistent=True); rimossa nota errata "non in slide"_

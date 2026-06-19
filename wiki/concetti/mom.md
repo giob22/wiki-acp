@@ -10,21 +10,38 @@ Il **Message-Oriented Middleware (MOM)** è uno strato software che permette la 
 
 ## Spiegazione
 
-**Motivazione**:
-- RPC è **sincrono**: il client si blocca ad aspettare; se il server è lento, rallenta tutto
-- MOM introduce comunicazione **asincrona**: sender invia e continua l'esecuzione
-- Soluzione per **scalabilità** e **high availability**
+**Motivazione**: i MOM sono di solito usati per **rimpiazzare** i sistemi basati sul paradigma [[rpc]].
+- le chiamate RPC sono **sincrone** → problemi di **scalabilità**; le richieste RPC arretrate rallentano l'intero sistema → soluzione: un **meccanismo asincrono** per aumentare la scalabilità;
+- servono per sistemi con **high availability** e **scalability**: il sistema deve restare funzionante anche dopo il fallimento di uno o più server → soluzione: con i **broker** ci si può spostare da un server all'altro in caso di fallimento.
+
+### Comunicazione indiretta
+
+La **comunicazione indiretta** è la comunicazione tra entità di un sistema distribuito tramite un **intermediario**, **senza accoppiamento diretto** tra sender e receiver. La "natura" dell'intermediario dipende dall'approccio:
+
+| Approccio | Astrazione | Cardinalità |
+|---|---|---|
+| **Group communication** | gruppo: un messaggio è mandato a un gruppo e recapitato ai membri | uno-a-gruppo |
+| **Shared memory** | *distributed shared memory*, **tuple space** (vedi TS in [[middleware]]) | condivisa |
+| **Code di messaggi** | coda: il sender inserisce, **un solo** receiver rimuove (point-to-point) | uno-a-uno |
+| **Publish-subscribe** | il publisher genera messaggi, il subscriber esprime interesse per un tipo | **uno-a-molti** |
+
+Le soluzioni middleware basate su **code** o su **publish-subscribe** sono note come **Message-Oriented Middleware (MOM)**; i sistemi pub-sub sono anche detti **distributed event-based systems**.
 
 **Architettura MOM**:
 ```
-[Applicazione A] → API → [Message Broker] → API → [Applicazione B]
+[Applicazione X] → API → [Message Broker (MOM)] → API → [Applicazione Y]
 ```
 
-**Caratteristiche chiave**:
-1. **Disaccoppiamento spaziale**: A non conosce l'identità di B (e viceversa)
-2. **Disaccoppiamento temporale**: B può non essere attivo quando A invia — il broker conserva il messaggio
-3. **Store-and-forward**: broker conserva il messaggio finché la rete è disponibile
-4. **Comunicazione asincrona**: A non si blocca nell'attesa che B riceva
+Il MOM gioca il ruolo di **intermediario (message broker)** nella comunicazione indiretta basata su messaggi: garantisce lo scambio con tecniche di **store-and-forward** e solleva il programmatore dai dettagli di basso livello (RPC, protocolli di rete), esponendo una **API di alto livello** con primitive **send/receive message**.
+
+**Aspetti chiave di un MOM**:
+- recapita il messaggio all'applicazione B, che può **risiedere su una macchina diversa** da A;
+- **gestisce la comunicazione tramite rete**: può conservare il messaggio finché la rete diventa disponibile, poi lo inoltra (**store-and-forward**);
+- B potrebbe **non essere in esecuzione** quando A invia: il MOM **conserva** il messaggio finché B diventa disponibile, e **A non si blocca** in attesa (comunicazione **asincrona**).
+
+**Proprietà di disaccoppiamento** — i MOM forniscono integrazione **flessibile e disaccoppiata**:
+1. **Disaccoppiamento spaziale**: il sender **non conosce** (né ha bisogno di conoscere) l'identità del receiver e viceversa → i partecipanti possono essere sostituiti, migrati, aggiornati;
+2. **Disaccoppiamento temporale**: sender e receiver possono avere **cicli di vita differenti** → non devono necessariamente essere in esecuzione allo stesso tempo per comunicare.
 
 **Domini di messaging**:
 
@@ -49,21 +66,22 @@ Publisher → [Topic] → Subscriber 1
                    → Subscriber N
 ```
 
-**Pattern Observer vs MOM**:
-- Observer pattern: subject notifica direttamente i suoi observer — scarsa scalabilità, accoppiamento
-- Notification Service: terza entità (NS = broker) gestisce subscriptions e notifiche — più scalabile
-- Il pub-sub MOM è essenzialmente un Notification Service distribuito
+**Evento e Notifica** — la comunicazione indiretta è molto usata per la **propagazione (dissemination) di eventi**:
+- **Evento**: condizione rilevata da/in un'applicazione, comunicata all'intermediario (il MOM) sotto forma di messaggio;
+- **Notifica**: atto di informare un insieme di applicazioni dell'occorrenza dell'evento.
 
-**Evento e Notifica**:
-- **Evento**: condizione rilevata da/in un'applicazione, comunicata al broker
-- **Notifica**: atto di informare i subscriber dell'occorrenza dell'evento
+L'approccio evento-notifica richiama il pattern **Observer**: ① l'observer dichiara interesse agli eventi del subject tramite una **sottoscrizione**; ② il subject rileva l'occorrenza di un evento; ③ il subject **notifica** gli osservatori invocandone un'apposita funzione.
 
-**Protocolli MOM**:
-- **AMQP**: binario, popolare, per interoperabilità enterprise
-- **MQTT**: leggero, pub-sub, standard ISO, progettato per IoT/edge
-- **STOMP**: testuale, semplice, wire-level format per qualsiasi broker compatibile
+**Dall'Observer al Notification Service** — l'Observer riduce l'accoppiamento e supporta la comunicazione **uno-a-molti**, ma ha inconvenienti: il subject deve mantenere una **lista di observer** e relative sottoscrizioni, è **responsabile di notificarli** (scarsa scalabilità) e **gli observer devono conoscere il subject**. Per risolverli, la responsabilità di gestire osservatori/sottoscrizioni e di notificarli è delegata a una terza entità detta **Notification Service (NS)** — il broker. Importante: il **pub-sub non è l'unico modello** per i sistemi event-based; un NS può anche usare **code di messaggi** (il sender, all'occorrenza di un evento, inserisce il messaggio in una coda; il messaggio viene recapitato ai receiver sottoscritti alla coda).
 
-> 🎯 Esame: Differenza PTP vs Pub-Sub, disaccoppiamento spaziale/temporale, perché MOM è preferibile a RPC per scalabilità.
+**Sistemi event-based nell'industria**: SESAR (controllo traffico aereo Europa), NASPI (monitoraggio rete elettrica Nord America), FSE (fascicolo sanitario elettronico).
+
+**Protocolli di messaging dei broker MOM**:
+- **AMQP** (Advanced Message Queuing Protocol): protocollo **binario wire-level**, progettato per **rimpiazzare** middleware di messaggistica proprietari e per l'**interoperabilità tra fornitori diversi**; ancora molto popolare;
+- **MQTT** (Message Queuing Telemetry Transport): protocollo **publish-subscribe leggero**, standard **ISO** (ISO/IEC PRF 20922), su **TCP/IP**; progettato per **basso consumo energetico e banda limitata** (scenari fog/edge computing, IoT);
+- **STOMP** (Simple/Streaming Text Oriented Message Protocol): protocollo **testuale**, semplice, pensato per i MOM; fornisce un formato **wire-level** che consente ai client STOMP di parlare con **qualsiasi broker** che supporti il protocollo.
+
+> 🎯 Esame: Differenza PTP vs Pub-Sub, disaccoppiamento spaziale/temporale, perché MOM rimpiazza RPC per scalabilità/availability, le 4 forme di comunicazione indiretta, AMQP/MQTT/STOMP (binario/leggero-IoT/testuale).
 
 ## Perché importa
 
@@ -75,11 +93,13 @@ MOM è usato in sistemi ad alta scala e alta disponibilità (SESAR, NASPI, FSE).
 - [[rpc]] — alternativa sincrona al MOM
 - [[socket]] — il broker comunica via socket TCP
 - [[activemq]] — broker MOM open-source usato nel corso (STOMP, AMQP, MQTT)
+- [[middleware]] — il MOM è un middleware orientato alla comunicazione; comunicazione indiretta e tuple space (TS)
 - [[middleware-trasparenza]] — STOMP/AMQP/JMS come meccanismi di indipendenza dal provider
+- [[sottoscrizioni-durabili]] — disaccoppiamento temporale esteso ai topic
 
 ## Fonti
 
 - [[15-python-mom]]
 - [[13-sistemi-middleware]]
 
-_Aggiornato: 2026-06-06 — aggiunti link a activemq, middleware-trasparenza_
+_Aggiornato: 2026-06-19 — estensione MODULO 3 (slide 15): comunicazione indiretta (4 forme: group/shared memory/code/pub-sub), aspetti chiave + disaccoppiamento spaziale/temporale dettaglio, Observer→Notification Service (NS può usare code), sistemi event-based industria, protocolli AMQP/MQTT/STOMP in dettaglio_

@@ -32,6 +32,12 @@ Un namespace è un **dominio di denominazione** per un certo tipo di risorsa. Pr
 
 **`setns()`** — permette a un processo di fare il **join** di un namespace esistente (già creato da un altro processo).
 
+> 🎯 Esame — i namespace si **ereditano, non si "hanno"**: un normale processo lanciato da terminale **non** ha un namespace proprio. Con una `fork()` ordinaria il figlio **eredita** i namespace del padre. Risalendo la catena (shell → ... → init, PID 1), tutti i processi normali vivono negli stessi **namespace "root"**, esistenti dall'avvio e contenenti tutte le risorse globali. Un namespace **nuovo** nasce **solo** passando i flag `CLONE_NEWxxx` a `clone()`/`unshare()` — ed è esattamente ciò che fa Docker all'avvio di un container. Formulazione efficace: *«i namespace non sono una proprietà intrinseca del processo, ma un contesto che si eredita»*. (Verificabile: ogni processo espone i propri namespace in `/proc/<pid>/ns/` come link simbolici.)
+
+**`ioctl()`** è una system call generica del kernel (input/output control): serve a inviare comandi di controllo a oggetti del kernel che non rientrano nelle normali `read`/`write`. Nel contesto dei namespace è usata per **interrogarli** (tipo, relazioni padre/figlio), operazioni non coperte da `clone`/`setns`/`unshare`.
+
+**`nsenter` e `docker exec`** — `nsenter` (*namespace enter*) è un comando Linux che permette di **entrare nei namespace di un processo già in esecuzione**: dato il PID, esegue un comando nel contesto dei suoi namespace (stessa rete, stesso filesystem, stessi processi). Si appoggia internamente a `setns()`. È il meccanismo che sta **sotto a `docker exec`**: `docker exec -it <container> sh` fa sostanzialmente un `nsenter` nei namespace del container e avvia lì una shell.
+
 ```
 Linux namespaces ─── API ─── clone
                               ├── setns
@@ -54,17 +60,23 @@ root PID Namespace:
                       └── pid 4 visto come pid 2 nel ns
 ```
 
-All'interno del namespace x, getpid() restituisce 1 per il processo che sarebbe pid 3 nel root namespace.
+All'interno del namespace x, getpid() restituisce 1 per il processo che sarebbe pid 3 nel root namespace. Due conseguenze:
+1. dentro il container il processo principale è **PID 1**, e in Unix il PID 1 (*init*) ha responsabilità speciali: **raccoglie i processi zombie** e riceve i segnali con semantica particolare (se non installa un handler, molti segnali vengono **ignorati** invece di terminare il processo);
+2. l'host **vede** tutti i processi dei container (coi loro PID reali), mentre un container **non vede** i processi dell'host: l'isolamento è **unidirezionale**, dall'interno verso l'esterno.
+
+> 💡 Il "PID 1 nel container" è un problema pratico noto: se l'`ENTRYPOINT` è l'applicazione stessa, questa diventa init e potrebbe non gestire `SIGTERM` (quindi `docker stop` aspetta il timeout e poi manda `SIGKILL`) né raccogliere gli zombie. Per questo esiste l'opzione `docker run --init`, che inserisce un piccolo init (`tini`) come PID 1.
 
 ### Esempio: Network namespace
 
-Ogni container ottiene il proprio stack di rete (interfacce, tabelle di routing, porte). La comunicazione tra namespace avviene tramite coppie di interfacce virtuali `veth` collegate attraverso un **Linux bridge**.
+Ogni container ottiene il proprio stack di rete (interfacce, tabelle di routing, porte). Più precisamente, nel container è presente una **propria istanza dello stack TCP/IP**: non viene duplicato il *codice* dello stack (che è uno solo, nel kernel condiviso), ma vengono replicate **per namespace** tutte le strutture dati — interfacce, tabelle di routing, tabella ARP, regole iptables/firewall e, soprattutto, lo **spazio delle porte**. Conseguenza pratica: **due container possono entrambi fare bind sulla porta 5001 senza conflitto**, perché ciascuno la apre nel proprio stack; il conflitto nasce solo quando si vogliono pubblicare entrambe sulla **stessa porta dell'host** (che vive nel root namespace ed è unica).
+
+La comunicazione tra namespace avviene tramite **coppie veth** (*virtual ethernet pair*, come un cavo virtuale: ciò che entra da un capo esce dall'altro): un capo è la `eth0` interna al container, l'altro sta nel **root network namespace** collegato a un **Linux bridge** (uno switch software). In Docker questo bridge si chiama di default **`docker0`**, e il traffico verso l'esterno passa per **NAT** attraverso l'interfaccia fisica dell'host. È anche il motivo per cui serve la **pubblicazione delle porte** (`-p 5001:5001`): le porte aperte dentro il container vivono nel suo network namespace e non sono raggiungibili dall'esterno finché non si crea un inoltro esplicito dall'host.
 
 ```
 Linux Host
 └── Root network namespace
-    ├── Network namespace 1 (eth0@YY → vethYYYY → Linux bridge)
-    └── Network namespace 2 (eth0@XX → vethXXXX → Linux bridge → eth0 fisico)
+    ├── Network namespace 1 (eth0@YY → vethYYYY → docker0 bridge)
+    └── Network namespace 2 (eth0@XX → vethXXXX → docker0 bridge → eth0 fisico → NAT)
 ```
 
 ### Esempio: Mount namespace
@@ -96,3 +108,4 @@ I namespace sono il **fondamento dell'isolamento** nei container. Senza di essi,
 - [[03-service-deployment-containers]]
 
 _Aggiornato: 2026-06-12 — ingest iniziale_
+_Aggiornato: 2026-06-20 — MODULO 4 (appunti): namespace si ereditano non si "hanno" (fork eredita, nuovo solo con CLONE_NEWxxx), ioctl, nsenter↔docker exec (via setns), istanza stack TCP/IP per network namespace (bind stessa porta senza conflitto), veth/docker0/NAT, PID 1=init (zombie reaping, SIGTERM, docker run --init/tini)_

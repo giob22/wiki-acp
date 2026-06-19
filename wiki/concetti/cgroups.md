@@ -53,6 +53,12 @@ Docker crea un cgroup dedicato per ogni container e vi associa il processo princ
 
 I cgroup sono organizzati in una gerarchia ad albero. Un processo appartiene a esattamente un cgroup per ogni tipo di controller. I limiti si propagano dall'alto verso il basso: un cgroup figlio non può superare i limiti del cgroup padre.
 
+I cgroup si presentano all'utente come un **filesystem virtuale** montato sotto `/sys/fs/cgroup`: creare un gruppo significa creare una directory, impostare un limite significa scrivere in un file (es. `memory.max`). Esistono due versioni: **cgroups v1** (gerarchie separate per ogni controller, quella descritta dalle slide) e **cgroups v2** (gerarchia unificata, default nelle distribuzioni moderne). Se un container supera il limite di memoria interviene l'**OOM killer** (Out-Of-Memory killer), che uccide processi dentro il cgroup — è il motivo per cui un container "muore" se sfora la RAM assegnata.
+
+### I cgroups limitano anche risorse non-hardware
+
+È facile pensare che i cgroups riguardino solo risorse fisiche (CPU, RAM, I/O, banda di rete). In realtà limitano anche **risorse astratte gestite dal kernel**, finite pur non essendo hardware. L'esempio canonico è il controller **`pids`** (process number controller): impedisce a un gruppo di processi di creare nuovi task (via `fork()`/`clone()`) oltre un limite (`pids.max`). Il razionale: il **PID** e la `task_struct` associata nel kernel sono una risorsa fondamentale e finita, banale da esaurire senza toccare CPU o memoria. L'applicazione pratica è la difesa contro la **fork bomb** (un processo che si duplica all'infinito): senza un limite sui PID, un container compromesso potrebbe **saturare la tabella dei processi** e bloccare l'intero host pur restando dentro i limiti di CPU e RAM. Docker espone questo con `--pids-limit`, Kubernetes con `pids.max` per pod. Esiste anche il controller `kmem` (memoria allocata *dal kernel per conto* dei processi: strutture interne, slab). Morale: i cgroups non rispondono solo a "quanta CPU/RAM consumi", ma più in generale a **"quanti oggetti del kernel un gruppo di processi può allocare"**.
+
 ## Perché importa
 
 Senza cgroups, container diversi sullo stesso host potrebbero monopolizzare CPU o memoria, compromettendo l'isolamento prestazionale. I cgroups garantiscono che ogni container rispetti i limiti assegnati e che le risorse siano distribuite in modo controllato.
@@ -70,3 +76,4 @@ Senza cgroups, container diversi sullo stesso host potrebbero monopolizzare CPU 
 - [[03-service-deployment-containers]]
 
 _Aggiornato: 2026-06-12 — ingest iniziale_
+_Aggiornato: 2026-06-20 — MODULO 4 (appunti): filesystem virtuale /sys/fs/cgroup, cgroups v1 vs v2, OOM killer, controller pids/fork bomb (--pids-limit), kmem; cgroups limitano anche risorse non-hardware del kernel_

@@ -8,73 +8,121 @@ prerequisiti: [socket, rpc]
 
 **REST (Representational State Transfer)** è uno stile architetturale per sistemi distribuiti che espone **risorse** identificate da **URI** e le manipola tramite un'**interfaccia uniforme** (metodi HTTP). È **stateless**: ogni richiesta è autocontenuta.
 
+Definizione del corso: *"uno stile architetturale che definisce gli attributi di qualità architetturale del World Wide Web, visto come un sistema ipermediale aperto, accoppiato lascamente, massicciamente distribuito e decentralizzato"*. Rispetto ai meccanismi [[rpc|RPC]] il focus è sulle **risorse** e non sulle *procedure*.
+
 ## Spiegazione
 
-**Concetti chiave**:
+### Web Service (WS)
+
+Prima di REST, il concetto contenitore è il **Web Service**. Definizione W3C: *"A Web service is a software system identified by a **URI** [RFC 2396], whose public interfaces and bindings are defined and described using XML. Its definition can be discovered by other software systems"*.
+
+**Servizio** = modulo software che espone **funzionalità invocabili dai client**:
+- il fornitore ne produce l'**implementazione** e ne fornisce la **descrizione** (che include, p.es., l'interfaccia del servizio);
+- un servizio è **riusabile** e **componibile**;
+- tipicamente offerto e invocato via Internet con **protocolli standard** (HTTP, URI, XML, SOAP).
+- "web service" = usare richieste HTTP per avviare l'esecuzione di un programma (≠ *web server*).
+
+### Concetti chiave REST
 
 **Risorsa**: entità indirizzabile tramite web — accessibile e trasferibile tra client e server.
 
-**URI (Uniform Resource Identifier)**:
+**URI (Uniform Resource Identifier)** — standard Internet per identificare le risorse:
 ```
 foo://example.com:8042/over/there?name=ferret#nose
   ↑        ↑           ↑          ↑           ↑
 scheme  authority     path      query      fragment
 ```
 
-**URI Template**: pattern parametrico — `http://service.com/order/{oid}/item/{iid}`
+**URI Template**: specifica come costruire/leggere una URI — `http://service.com/order/{oid}/item/{iid}`
 
-**Interfaccia uniforme** — metodi HTTP:
+**Interfaccia uniforme** — i client interagiscono con le risorse tramite un insieme **fissato** di metodi (in HTTP: GET/POST/PUT/DELETE):
 
 | Metodo | CRUD | Semantica | Safe | Idempotente |
 |--------|------|-----------|------|-------------|
-| GET    | Read | Recupera risorsa | SÌ | SÌ |
-| POST   | Create | Crea sotto-risorsa | NO | NO |
-| PUT    | Update | Crea o aggiorna all'URI | NO | SÌ |
-| DELETE | Delete | Elimina risorsa | NO | SÌ |
+| GET    | Read | Recupera lo stato corrente della risorsa | SÌ | SÌ |
+| POST   | Create | Crea una sotto-risorsa (figlia) | NO | NO |
+| PUT    | Update | Inizializza/aggiorna lo stato all'URI dato | NO | SÌ |
+| DELETE | Delete | Elimina risorsa (URI non più valido) | NO | SÌ |
 
 - **Safe**: non altera lo stato del server (read-only)
 - **Idempotente**: richieste identiche producono sempre lo stesso risultato
 
-**Stateless**: il server non mantiene stato tra richieste — ogni richiesta è completa di tutte le info necessarie.
+**Stateless**: ciascun ciclo richiesta-risposta rappresenta un'interazione **completa** tra client e server — **non esiste il concetto di sessione**. Ogni richiesta porta con sé tutte le info necessarie.
 
-**RPC vs REST**:
-- RPC: vocabolario custom per ogni servizio (`insertOrder()`, `deleteOrder()`...)
-- REST: vocabolario fisso (HTTP verbs) — tutti i servizi REST hanno la stessa interfaccia base
+### REST su HTTP
 
-**Esempio CRUD su Orders**:
+Lo scenario più comune è REST implementato sul protocollo **HTTP** (HyperText Transfer Protocol), protocollo applicativo per il trasferimento di pagine web:
+- ogni pagina/oggetto è identificato da un **URL (Uniform Resource Locator)**;
+- prevede metodi (POST/GET/PUT/DELETE) per la gestione delle risorse → operazioni **CRUD** (create, retrieve, update, delete).
+
+**Entity-body** (Representation) per metodo:
+
+| Metodo | Body richiesta | Body risposta |
+|--------|----------------|---------------|
+| GET    | vuoto | rappresentazione della risorsa |
+| DELETE | vuoto | vuoto o messaggio di stato |
+| PUT    | rappresentazione proposta | vuoto / stato / copia |
+| POST   | rappresentazione proposta | vuoto / stato / copia |
+
+### XML e JSON
+
+Formati testuali per la rappresentazione dei dati scambiati client↔servizio (**external data representation**):
+- **XML** (Extensible Markup Language);
+- **JSON** (JavaScript Object Notation) — serie non ordinata di coppie nome/valore; dominante in REST.
+
+> 💡 Connessione: sono rappresentazioni **testuali**, a differenza della **serializzazione gRPC** che è **binaria** → [[protocol-buffers]].
+
+### RPC vs REST
+
+- **RPC-style**: ogni web service espone un proprio *vocabolario* di metodi (funzioni con nomi diversi): `insertOrder(id)`, `getOrder(id)`...
+- **REST**: vocabolario **fisso** (i metodi HTTP) → tutti i servizi REST espongono la stessa interfaccia di base.
+
 ```
-POST   /Orders/8    → CREATE nuovo ordine
-GET    /Orders/1    → READ ordine 1
-PUT    /Orders/12   → UPDATE ordine 12
-DELETE /Orders/12   → DELETE ordine 12
+RPC-style:            RESTful:
+insertOrder(id);      POST   Order/{id}
+getOrder(id);         GET    Order/{id}
+updateOrder(id);      PUT    Order/{id}
+deleteOrder(id);      DELETE Order/{id}
 ```
+
+### Progettazione REST (passi)
+
+1. Identificare le **risorse** da esporre come servizi
+2. Per ogni risorsa: definire le **URI**
+3. Esporre un **subset adeguato** dell'interfaccia uniforme (ragionare su cosa significa GET/POST/... su quella risorsa, quali operazioni consentire)
+4. Progettare le **rappresentazioni** (JSON, XML, messaggi di stato)
 
 **URI best practices**:
-- Usare **nomi** non verbi: `DELETE /book/15` OK, `GET /book?action=delete` NO
-- POST crea risorsa **figlia** rispetto al padre; PUT crea o modifica all'URI esatto
+- Usare **nomi** non verbi: `DELETE /book/15` OK, `GET /book?isbn=15&action=delete` NO
+- GET è read-only/idempotente; POST è read-write e può modificare lo stato
+- POST crea risorsa **figlia** rispetto al padre; PUT crea/modifica all'URI esatto
 
-**Formati rappresentazione**: JSON e XML (testuali); JSON è dominante nell'ecosistema REST moderno.
+### HTML e DOM (cenni)
 
-**Progettazione REST** (passi):
-1. Identificare le risorse da esporre
-2. Definire le URI
-3. Scegliere i metodi HTTP adeguati per ogni risorsa
-4. Definire le rappresentazioni (JSON, XML)
+**HTML** (HyperText Markup Language): specifica la **struttura** degli elementi visivi di una web app tramite **tag** `<name>...</name>` (opening/closing). Tag principali: `<html>`/`<head>`/`<body>`, `<header>`/`<main>`/`<footer>`, heading `<h1>..<h6>`, anchor `<a href>` (hypertext), liste `<ol>`/`<ul>`/`<li>`, `<div>` (container).
 
-> 🎯 Esame: Definire safe e idempotente con esempi, differenza POST/PUT, principi REST (stateless, uniform interface).
+I tag definiscono il **DOM (Document Object Model)**: architettura gerarchica ad **albero** dei *DOM elements*, interrogabile/manipolabile via scripting (es. JavaScript). Rilevante per Flask perché [[flask|Jinja2]] genera HTML.
+
+### OpenAPI / Swagger
+
+**OpenAPI Specification** (già Swagger): framework per descrivere, documentare e interagire con API RESTful in formato YAML/JSON. Definisce endpoint, parametri, schemi di richiesta/risposta; genera documentazione (Swagger UI) e **codice stub client/server** in molti linguaggi (Swagger Codegen). Usato spesso con [[flask|Flask]] per prototipazione rapida.
+
+> 🎯 Esame: definire safe e idempotente con esempi, differenza POST/PUT, principi REST (stateless, uniform interface, risorse vs procedure), RPC-style vs RESTful.
 
 ## Perché importa
 
-REST è l'architettura dominante per API web. Flask nel corso è usato per creare API RESTful.
+REST è l'architettura dominante per API web. Nelle prove pratiche ACP il livello di esposizione esterna (Archive/Query Server) è quasi sempre un'API RESTful realizzata con [[flask|Flask]], a valle di un livello di comunicazione [[rpc]]/[[mom]].
 
 ## Connessioni
 
-- [[rpc]] — confronto: RPC sincrono/procedurale vs REST resource-oriented
-- [[protocol-buffers]] — gRPC usa protobuf binario; REST usa JSON testuale
+- [[rpc]] — confronto: RPC sincrono/procedurale (vocabolario custom) vs REST resource-oriented (vocabolario fisso)
+- [[protocol-buffers]] — gRPC usa protobuf binario; REST usa JSON/XML testuale
+- [[flask]] — micro-framework che implementa REST nel corso
 - [[nosql]] — MongoDB è tipicamente esposto via API REST
+- [[gestione-errori-api]] — status code HTTP come contratto d'errore dell'API REST
 
 ## Fonti
 
 - [[16-python-flask]]
 
-_Aggiornato: 2026-06-04 — ingest iniziale_
+_Aggiornato: 2026-06-20 — MODULO 4: aggiunti Web Service/servizi, entity-body, HTML/DOM, OpenAPI, RPC vs REST esteso_

@@ -40,15 +40,31 @@ MongoDB Instance
 }
 ```
 
+## Mongo shell (cenni)
+
+Avvio server: `sudo systemctl start mongod` (Linux). Shell: `mongosh` / `mongo` (connette a `127.0.0.1:27017`). Comandi base:
+```
+show dbs;                       // database esistenti
+use test;                       // seleziona/crea database
+show collections;               // collection del db corrente
+db.cards.insertMany(cards);     // insert
+db.cards.find();                // tutti i documenti
+db.coll.remove({QUERY});        // rimuove i match; remove({}) svuota la collection
+db.dropDatabase();              // elimina il database corrente
+```
+
 ## PyMongo — driver Python
+
+**Driver ufficiale** per usare MongoDB in Python (`pip install pymongo`). I **documents** sono rappresentati come **dict** Python (dati JSON-style).
 
 ```python
 from pymongo import MongoClient
 
-# Connessione
-client = MongoClient("mongodb://localhost:27017/")
-db = client["mio_database"]
-collection = db["utenti"]
+# Connessione (host+porta o connection string)
+client = MongoClient("localhost", 27017)
+# client = MongoClient("mongodb://localhost:27017/")
+db = client["mio_database"]        # accesso database (creato on-the-fly)
+collection = db["utenti"]          # accesso collection
 
 # INSERT
 doc = {"nome": "Alice", "età": 30}
@@ -155,4 +171,4 @@ Parametri chiave: `filter`, `update`/`replacement`, `upsert`, `return_document` 
 
 - [[17-nosql-databases]]
 
-_Aggiornato: 2026-06-06 — espansa sezione query con operatori filtro/update completi, find_one_and_update e schema decisionale_
+_Aggiornato: 2026-06-20 — MODULO 4: aggiunti cenni mongo shell, intro PyMongo (driver ufficiale, documents=dict). Sezione query già completa (2026-06-06)_
