@@ -26,6 +26,9 @@ Principali scenari: collegare **microservizi poliglotti** con stile richiesta-ri
 ### Perché HTTP/2: "RPC come riferimenti a oggetti HTTP"
 
 L'idea di base di gRPC è **trattare le RPC come riferimenti a oggetti HTTP**, trasportando dati e richieste su **HTTP/2**, importante revisione di HTTP che dà vantaggi prestazionali rispetto a HTTP 1.x:
+
+> 💡 Glossa — cosa significa "riferimenti a oggetti HTTP": è la formulazione (un po' condensata) del professore. Tradotta nel meccanismo concreto: gRPC **non inventa un proprio protocollo di rete**, ma **mappa ogni RPC su una risorsa HTTP/2 indirizzabile**. Ogni metodo definito nel `.proto` diventa un **endpoint HTTP/2** con path della forma `/package.Service/Metodo`; invocare la RPC equivale a fare un `POST` HTTP/2 verso quel path, e i messaggi richiesta/risposta (serializzati con [[protocol-buffers]]) viaggiano dentro gli **stream** HTTP/2 come frame binari. Detto altrimenti: l'astrazione *"chiamata di funzione remota"* viene realizzata appoggiandosi all'astrazione *"risorsa HTTP"*. È proprio questo riuso che fa ereditare a gRPC i vantaggi di HTTP/2 elencati sotto (multiplexing, streaming, header compression).
+
 - **Binary Framing Layer**: richieste/risposte sono suddivise in **messaggi di piccole dimensioni** con frame in **formato binario**, rendendo efficiente la trasmissione;
 - **gerarchia stream → message → frame**:
   - **Stream**: flusso bidirezionale di byte dentro una connessione stabilita, può trasportare uno o più messaggi;
@@ -306,3 +309,4 @@ gRPC è uno degli argomenti avanzati del corso — integra RPC, protobuf, HTTP/2
 - [[25-java-grpc]]
 
 _Aggiornato: 2026-06-19 — estensione MODULO 2 (slide 14): scenari/CNCF, HTTP/2 (binary framing, stream/message/frame, multiplexing), blocking vs non-blocking stub, 4 tipi di RPC call con generators/yield, thread-safety+so_reuseport, aggiornare servizio, errori tipici, limitazioni (gRPC-Web, non human-readable)_
+_Aggiornato: 2026-06-20 — aggiunta glossa alla frase "RPC come riferimenti a oggetti HTTP": chiarito il mapping RPC→risorsa HTTP/2 (path /package.Service/Metodo, POST, stream/frame binari)_
