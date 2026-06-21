@@ -55,7 +55,9 @@ prerequisiti: [mom, pub-sub, oop]
 - I client li recuperano tramite JNDI lookup (per nome) — ignorano i dettagli del provider
 - Il programma JMS deve conoscere **solo** il nome JNDI e l'interfaccia JMS dell'administered object, **non** i dettagli del provider
 
-**JNDI in dettaglio** — un *naming service* mantiene un insieme di **binding** tra nomi e riferimenti a oggetti; JNDI è l'interfaccia Java standard verso un naming service qualsiasi (è indipendente dallo specifico servizio: vi si accede tramite plugin chiamati **Service Provider**).
+### Il servizio di naming (JNDI)
+
+**A cosa serve un naming service** — è un **livello di indirezione** tra un *nome logico* e l'*oggetto reale*. Un naming service mantiene un insieme di **binding** tra nomi e riferimenti a oggetti (o direttamente a oggetti). Il client chiede l'oggetto **per nome** (`lookup`) e riceve il riferimento, **senza sapere** dove l'oggetto si trovi né di che classe concreta sia. In JMS questo è ciò che permette il disaccoppiamento: il client conosce solo il nome JNDI e l'interfaccia JMS dell'administered object, mentre la classe concreta provider-dependent (es. una `ActiveMQConnectionFactory`) viene risolta a runtime dal naming service. È un caso applicato di **trasparenza di locazione/accesso** → [[middleware-trasparenza]].
 
 | Concetto JNDI | Significato |
 |---|---|
@@ -64,8 +66,38 @@ prerequisiti: [mom, pub-sub, oop]
 | **Reference** | puntatore a un oggetto |
 | **Context** | insieme di associazioni nome-oggetto; tutte le operazioni avvengono rispetto a un Context |
 
-- `Context` è l'interfaccia con i metodi `bind(name, obj)` (il nome non deve essere già associato), `rebind`, `lookup(name)`, `unbind`, `rename`. `InitialContext` è l'implementazione concreta.
-- Il client individua il provider JNDI configurando due proprietà: `java.naming.factory.initial` (la factory del context, es. `org.apache.activemq.jndi.ActiveMQInitialContextFactory`) e `java.naming.provider.url` (es. `tcp://127.0.0.1:61616`).
+**JNDI = API standard + architettura a Service Provider (SPI)** — **Java Naming and Directory Interface (JNDI)** è un'interfaccia che espone le funzionalità *comuni* a qualsiasi naming service. Il punto chiave: **JNDI è indipendente dallo specifico servizio di naming**. È strutturata su due livelli:
+
+- **API** (lato client): ciò che il programma JMS usa — `Context`, `lookup`, `bind`… L'applicazione parla **solo** con questa API, sempre uguale.
+- **SPI — Service Provider Interface** (lato implementazione): lo specifico naming service è "agganciato" a JNDI tramite un **plugin chiamato Service Provider**, che implementa la SPI traducendo le chiamate JNDI standard verso il naming service reale.
+
+```
+[Applicazione JMS]
+      ↓  usa
+[JNDI API]   (Context, lookup, bind, ...)   ← sempre identica
+      ↓  delega via SPI
+[Service Provider]  (plugin intercambiabile)
+      ↓
+[Naming service reale]  (es. quello di ActiveMQ, ma anche LDAP, RMI registry, DNS, file system...)
+```
+
+> 💡 Stessa idea dell'Abstract Factory di JMS: l'app dipende da un'**interfaccia standard** (JNDI API), l'implementazione concreta (Service Provider) è sostituibile senza toccare il codice client. Cambiare provider = cambiare il plugin SPI, non l'applicazione.
+
+**Quale Service Provider e come si raggiunge** — il client seleziona il Service Provider e localizza il naming service configurando due proprietà:
+- `java.naming.factory.initial` → la **factory del Context**, ovvero la classe del Service Provider da caricare (per ActiveMQ: `org.apache.activemq.jndi.ActiveMQInitialContextFactory`);
+- `java.naming.provider.url` → l'**URL** dove il naming service è raggiungibile (es. `tcp://127.0.0.1:61616`).
+
+**API del Context** — `Context` è l'interfaccia coi metodi per aggiungere/cercare/rimuovere binding; ogni operazione JNDI avviene **rispetto a un Context** (che rappresenta un insieme di binding). `InitialContext` ne è l'implementazione, punto d'ingresso del naming.
+
+| Metodo `Context` | Azione |
+|---|---|
+| `void bind(String name, Object o)` | crea il binding (il nome **non** deve essere già associato) |
+| `void rebind(String name, Object o)` | crea/sovrascrive il binding |
+| `Object lookup(String name)` | risolve il nome → ritorna l'oggetto/riferimento |
+| `void unbind(String name)` | rimuove il binding |
+| `void rename(String old, String new)` | rinomina un binding |
+
+> Nota: in JMS gli administered objects vengono **bindati** dall'amministratore/provider (lato setup) e il client tipicamente fa solo `lookup` (lato uso) — è il diagramma *Administrative Tool → bind → JNDI Namespace → lookup → JMS Client* della slide.
 
 ```java
 Hashtable<String,String> prop = new Hashtable<>();
@@ -223,7 +255,7 @@ producer.send(msg, DeliveryMode.NON_PERSISTENT, 3, 1000); // mode, priority, tim
 
 ## Interoperabilità JMS ↔ STOMP
 
-STOMP è un protocollo testuale semplice che **non conosce** i tipi di messaggio JMS (`TextMessage`/`BytesMessage`). L'interop si gestisce così:
+STOMP è un protocollo testuale semplice che **non conosce** i tipi di messaggio JMS (`TextMessage`/`BytesMessage`). L'interoperabilità si gestisce così:
 
 - **Tipo di body via `content-length`**: ActiveMQ usa l'header `content-length` per decidere il tipo nel passaggio STOMP→JMS — header **presente** → `BytesMessage`, header **assente** → `TextMessage` (in Python `stomp.py` si controlla con `auto_content_length`). Stessa logica nel verso JMS→STOMP.
 - **Durable subscriber in STOMP** (analogo a JMS): gli header custom `client-id` (comando `CONNECT`) e `activemq.subscriptionName` (comando `SUBSCRIBE`) vanno usati **in coppia** e la coppia identifica univocamente la sottoscrizione — esattamente come `clientID` + nome subscription in JMS. Se non impostato, `client-id` assume l'hostname.
@@ -255,4 +287,5 @@ JMS è il modo Java-standard per usare MOM. ActiveMQ nel corso è il provider JM
 - [[24-java-jms]]
 
 _Aggiornato: 2026-06-06 — aggiunto link a middleware-trasparenza_
+_Aggiornato: 2026-06-21 — approfondita la teoria del servizio di naming: a cosa serve (livello di indirezione nome↔oggetto, trasparenza di locazione), architettura JNDI API + SPI con i Service Provider come plugin intercambiabili (parallelo con l'Abstract Factory), ruolo delle due proprietà (factory.initial=plugin SPI, provider.url=URL), tabella metodi Context, bind lato admin vs lookup lato client_
 _Aggiornato: 2026-06-21 — estensione modulo JMS (slide 02_JAVA_05): JNDI in dettaglio (Context/InitialContext, bind/lookup, proprietà), modello di programmazione a 8 passi, consumo sincrono (receive/receiveNoWait) vs asincrono (MessageListener/onMessage), struttura messaggio (header/properties/selettori SQL-like/5 tipi di body), acknowledgement (AUTO/CLIENT/DUPS_OK + 3 fasi), sessioni transacted (commit/rollback), thread-safety, persistenza (PERSISTENT/NON_PERSISTENT), interop JMS↔STOMP (content-length, durable client-id+subscriptionName)_
