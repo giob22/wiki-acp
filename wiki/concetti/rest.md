@@ -6,7 +6,7 @@ prerequisiti: [socket, rpc]
 
 ## Definizione
 
-**REST (Representational State Transfer)** è uno stile architetturale per sistemi distribuiti che espone **risorse** identificate da **URI** e le manipola tramite un'**interfaccia uniforme** (metodi HTTP). È **stateless**: ogni richiesta è autocontenuta.
+**REST (Representational State Transfer)** è uno stile architetturale per sistemi distribuiti che espone **risorse** (corrispondono a dati e funzionalità) identificate da **URI** e le manipola tramite un'**interfaccia uniforme** (metodi HTTP). È **stateless**: ogni richiesta è autocontenuta.
 
 Definizione del corso: *"uno stile architetturale che definisce gli attributi di qualità architetturale del World Wide Web, visto come un sistema ipermediale aperto, accoppiato lascamente, massicciamente distribuito e decentralizzato"*. Rispetto ai meccanismi [[rpc|RPC]] il focus è sulle **risorse** e non sulle *procedure*.
 
@@ -21,6 +21,26 @@ Prima di REST, il concetto contenitore è il **Web Service**. Definizione W3C: *
 - un servizio è **riusabile** e **componibile**;
 - tipicamente offerto e invocato via Internet con **protocolli standard** (HTTP, URI, XML, SOAP).
 - "web service" = usare richieste HTTP per avviare l'esecuzione di un programma (≠ *web server*).
+
+### Web server vs Web service
+
+I due termini si assomigliano ma indicano cose **diverse**, ed è una distinzione tipica d'esame.
+
+- **Web server** — è un *processo* che ascolta su HTTP e, in risposta a una richiesta, **restituisce risorse/contenuti** (tipicamente documenti: pagine HTML, file statici, immagini, fogli di stile). Il suo compito è la **consegna di contenuti** sopra HTTP: gestire connessioni, instradare la richiesta verso il file/handler giusto, impostare status code e MIME type. Esempi: Apache, Nginx, il server di sviluppo **Werkzeug** di [[flask|Flask]]. Il client tipico è un **browser** che renderizza una pagina.
+
+- **Web service** — è un *sistema software* che **espone funzionalità (logica applicativa) invocabili da altri programmi** via rete, usando protocolli standard (HTTP, URI, JSON/XML). Qui il punto non è consegnare un documento da visualizzare, ma realizzare un'**interazione programma-a-programma**: il client è un altro software, non un utente che guarda una pagina. È il senso della definizione del corso: *usare richieste HTTP per **avviare l'esecuzione di un programma***.
+
+**Relazione tra i due:** non sono in alternativa, sono **a livelli diversi**. Un web service viene **ospitato/esposto attraverso** un web server: il web server è lo strato di trasporto/ascolto HTTP, il web service è la logica applicativa che gira sopra. In [[flask|Flask]] questo è esplicito: **Werkzeug** fornisce il web server WSGI, mentre le tue **view function + route** costituiscono il web service.
+
+| | Web server | Web service |
+|---|---|---|
+| Cosa fa | Riceve richieste HTTP, restituisce risorse/contenuti | Espone funzionalità invocabili da altri programmi |
+| Client tipico | Browser (renderizza una pagina) | Altro programma/software |
+| Output | Documenti (HTML, file statici, immagini) | Dati strutturati (JSON/XML) o effetti applicativi |
+| Esempi | Apache, Nginx, server di sviluppo Werkzeug | API REST/SOAP, endpoint Flask |
+| Livello | Trasporto/ascolto HTTP | Logica applicativa esposta *sopra* il web server |
+
+> 🎯 Esame: "Differenza tra web server e web service?" → il web server **serve contenuti** (consegna documenti a un browser); il web service **espone funzioni** invocabili da altri programmi. Il primo è l'infrastruttura, il secondo è ciò che vi gira sopra.
 
 ### Concetti chiave REST
 
@@ -126,3 +146,4 @@ REST è l'architettura dominante per API web. Nelle prove pratiche ACP il livell
 - [[16-python-flask]]
 
 _Aggiornato: 2026-06-20 — MODULO 4: aggiunti Web Service/servizi, entity-body, HTML/DOM, OpenAPI, RPC vs REST esteso_
+_Aggiornato: 2026-06-21 — nuova sottosezione "Web server vs Web service" (distinzione, relazione a livelli, tabella, Werkzeug=server / view function=service)_

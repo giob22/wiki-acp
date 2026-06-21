@@ -50,6 +50,11 @@ modelli (MOM/RPC-RMI/Tuple Space/DOM) · marshalling/unmarshalling + big/little-
 (CDR/XDR) · semantiche RPC (4 tipi) · "RPC con MOM e viceversa?" · pattern
 Proxy/Skeleton: perché + delega vs ereditarietà (accoppiamento).
 
+> 🎯 Domanda di cornice: **conciliare definizione di middleware ↔ EAI ↔ scenario odierno
+> (integrare componenti preesistenti) ↔ paradigma generale (heterogeneous distributed
+> computing)** → traccia di discorso completa in [[middleware]] (sezione "Traccia orale":
+> 5 passi + apertura/chiusura pronte, trasparenze come rovescio dell'eterogeneità).
+
 ---
 
 ## TAPPA 3 — gRPC e Protocol Buffers
@@ -76,14 +81,20 @@ gRPC↔Flask interop · esporre gRPC come REST.
 **Pagine:** [[mom]] → [[pub-sub]] → [[sottoscrizioni-durabili]] → [[jms]] → [[activemq]]
 
 **Domande coperte:** JMS in generale (JNDI/Context/ConnectionFactory/Administered Objects,
-Session single-thread) · perché serve un provider · struttura messaggio
-(Header/Proprietà/Body) · cosa è thread-safe · priorità via thread · fault tolerance
-(transazioni/persistenza/durable + "conviene attivarli tutti? No, overhead") · domini
-Queue/Topic · durable subscriber · ricezione async (MessageListener) vs sync · ACK
-(AUTO/CLIENT) · transazioni (commit/rollback, SESSION_TRANSACTED) · STOMP + MyListener ·
-interop JMS↔STOMP via broker · header STOMP vs `getJMSProperty()` · limiti STOMP.
+Session single-thread) · **naming service / JNDI** (livello di indirezione nome↔oggetto via
+binding; JNDI come **API standard + SPI**, naming service reale = plugin Service Provider
+intercambiabile, parallelo con Abstract Factory; `factory.initial`/`provider.url`;
+bind lato admin vs lookup lato client) · modello di programmazione a 8 passi · perché serve
+un provider · struttura messaggio (Header/Proprietà/Body, 5 tipi di Body) · selettori SQL-like
+· `JMSReplyTo`/`JMSCorrelationID` (request-reply su MOM) · cosa è thread-safe · priorità via
+thread · fault tolerance (transazioni/persistenza/durable + "conviene attivarli tutti? No,
+overhead") · domini Queue/Topic · durable subscriber · ricezione async (MessageListener) vs
+sync (receive/receiveNoWait/timeout) · ACK (AUTO/CLIENT/DUPS_OK) · transazioni
+(commit/rollback, SESSION_TRANSACTED) · STOMP + MyListener · interop JMS↔STOMP via broker ·
+header STOMP vs `getJMSProperty()` · limiti STOMP.
 
-> ⚠️ Non coperto: **JMS `ReplyTo`** → vedi sotto.
+> ✅ `ReplyTo` ora in [[jms]] (Header del messaggio); la trattazione completa del pattern
+> **request-reply su MOM** (coda temporanea + CorrelationID) resta nella sezione qui sotto.
 
 ---
 
@@ -93,11 +104,20 @@ interop JMS↔STOMP via broker · header STOMP vs `getJMSProperty()` · limiti S
 
 **Pagine:** [[rest]] → [[flask]] → [[socket]] (+ ripasso [[proxy-pattern]])
 
-**Domande coperte:** REST API · `@app.route` · convenzioni metodi HTTP come discriminante
-· semantica GET/POST/PUT/DELETE · perché dict/list (JSON nativo) · gap semantico JSON↔RPC
+**Domande coperte:** **web server vs web service** (server = serve contenuti a un browser;
+service = espone funzioni invocabili da altri programmi) · Web Service (def. W3C) ·
+servizio riusabile/componibile · REST API · `@app.route` · convenzioni metodi HTTP come
+discriminante · semantica GET/POST/PUT/DELETE · **safe vs idempotente** · **POST vs PUT**
+(figlia vs URI esatto) · **stateless / no sessione** · entity-body req/resp per metodo ·
+external data representation (XML/JSON testuali vs Protobuf binario) · RPC-style vs RESTful
+(vocabolario custom vs fisso) · **4 passi di progettazione REST** + URI best practice (nomi
+non verbi) · OpenAPI/Swagger · perché dict/list (JSON nativo) · gap semantico JSON↔RPC
 · mapping porte/repliche · come esporre gRPC come REST · TCP vs UDP · UDP pacchetto unico +
 separatore · Proxy/Skeleton TCP vs UDP · `bind()` vs `connect()` · Java aderisce a Berkeley
 socket? · RPC su UDP (poco pratico) · UDP multithread (cosa passare al thread).
+
+> ✅ Aggiunto il 2026-06-21: sottosezione **"Web server vs Web service"** in [[rest]]
+> (distinzione, relazione a livelli — Werkzeug = web server / view function = web service, tabella).
 
 ---
 
@@ -140,9 +160,9 @@ Risposte ai gap emersi dall'incrocio domande↔wiki. **Stato copertura:**
 |---|---|---|
 | Selfish Thread | ✅ coperto (2026-06-20) | [[java-threading]] |
 | `static synchronized` vs `synchronized` | ✅ coperto (2026-06-20) | [[java-sincronizzazione]] |
-| JMS ReplyTo | ⚠️ solo qui | da aggiungere a [[jms]] |
-| GC Java vs Python | ⚠️ solo qui | accenno in [[gil]] |
-| gRPC↔MongoDB (flusso) | ⚠️ solo qui | accenno in [[gestione-errori-api]] |
+| JMS ReplyTo | 🟡 voce-header in [[jms]]; pattern request-reply solo qui | [[jms]] (riga Header) |
+| GC Java vs Python | ⚠️ solo qui; reference counting accennato in [[gil]] | [[gil]] |
+| gRPC↔MongoDB (flusso) | ⚠️ flusso solo qui; mapping errori in [[gestione-errori-api]] | [[gestione-errori-api]] |
 
 Le sintesi qui sotto restano come ripasso rapido; per i primi due punti la trattazione completa è ora nelle pagine dedicate.
 
@@ -238,3 +258,5 @@ Flusso completo:
 ---
 
 _Aggiornato: 2026-06-20 — creazione percorso orale da Domande_ACP_aggiornate.pdf, con risposte ai 5 punti non coperti_
+_Aggiornato: 2026-06-21 — TAPPA 5 estesa (web server vs web service, Web Service W3C, safe/idempotente, POST vs PUT, stateless, 4 passi REST, OpenAPI); TAPPA 4 estesa (naming service/JNDI API+SPI, 8 passi, ReplyTo, selettori, 5 Body, ACK DUPS_OK); aggiornata tabella stato gap (ReplyTo ora in jms)_
+_Aggiornato: 2026-06-21 — TAPPA 2: link alla "Traccia orale" di [[middleware]] (conciliazione definizione↔EAI↔heterogeneous distributed computing)_

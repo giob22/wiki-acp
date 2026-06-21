@@ -101,6 +101,26 @@ L'**IDL** rappresenta un **contratto** tra client e server: serve a generare aut
 
 > 💡 Connessione: RMI registry e Sun RPC port mapper (vedi [[rpc]]) risolvono lo stesso problema — la **trasparenza alla locazione** — con un servizio di naming/directory che il client interroga prima di invocare il servizio remoto.
 
+## Traccia orale — conciliare definizione, EAI e paradigma generale
+
+> 🎯 Esame: domanda "di cornice" tipica — partire dalla **definizione** di middleware e collegarla al **problema dell'EAI** e allo **scenario odierno** dello sviluppo software (integrare componenti preesistenti) e al **paradigma generale di elaborazione**. Il trucco: non sono tre temi separati, sono **un unico filo** che parte dalla definizione stessa.
+
+**Idea portante:** *la definizione di middleware contiene già la risposta all'EAI*; il discorso non fa che srotolarla.
+
+1. **La definizione, letta per bene.** Il middleware è lo strato tra SO e applicazioni che maschera l'**eterogeneità** dei sistemi in rete. La parola-chiave non è "strato intermedio" ma il nome alternativo — *glue technologies*, **tecnologie collante**, cioè **tecnologie di integrazione di applicazioni**. La definizione non descrive uno strumento, descrive uno **scopo: integrare**. E "integrare" presuppone che ci sia già qualcosa da integrare → presuppone implicitamente uno scenario in cui il software **non si scrive da zero**.
+
+2. **Il paradigma generale che giustifica lo scenario.** È l'**heterogeneous distributed computing**: in un sistema distribuito (Coulouris: coordinazione *solo* via scambio di messaggi) l'**eterogeneità è la norma, non l'eccezione** (HW/SO incompatibili, linguaggi diversi per business logic/legacy/server-side, dati su DBMS diversi). Collegamento da esplicitare: *se l'eterogeneità è strutturale, allora "mascherare l'eterogeneità" non è un di più, è una necessità permanente*.
+
+3. **L'EAI: dove l'eterogeneità diventa problema concreto.** I sistemi complessi **evolvono da sistemi esistenti già funzionanti**, non nascono *ex novo* → si richiede di **usare COTS** e **riusare il legacy**. L'integrazione è **più difficile dello sviluppo ex novo** (vincoli, componenti mal documentati, cambio di competenze: dall'analisi/codifica all'architettura e alla **progettazione delle interfacce**). Frase a effetto: *la codifica è oggi una fase meno critica del passato; conta saper adattare componenti non pensati per interoperare*.
+
+4. **La conciliazione (cuore della risposta).** Le tecnologie middleware **nascono come risposta diretta al problema dell'EAI**: se lo scenario reale è integrare componenti preesistenti ed eterogenei (EAI), e se l'eterogeneità è la norma del calcolo distribuito (paradigma generale), allora serve uno strato-collante che mascheri quell'eterogeneità — ed è, per definizione, il middleware. Il *come* concreto sono le **trasparenze**, che non vanno recitate a memoria ma presentate come **il rovescio di ogni fonte di eterogeneità**: SO diversi → trasparenza del SO (portabilità); linguaggi diversi → trasparenza del linguaggio (sistema di tipi intermedio); locazione fisica → trasparenza alla locazione/migrazione; guasti parziali → trasparenza ai guasti/replicazione.
+
+5. **Atterraggio sul corso.** La **tassonomia** (RPC, MOM, DOM, WS…) è l'insieme dei modi concreti di fare integrazione; ogni tecnologia del corso è un'istanza: gRPC = RPC (→ [[rpc]], [[grpc]]), JMS/ActiveMQ = MOM (→ [[mom]]), REST = WS (→ [[rest]]). Lo stesso DOM/ORB/**IDL come contratto** tra parti scritte diversamente è, di nuovo, integrazione via interfacce.
+
+**Apertura pronta:** *"Il middleware viene spesso definito come uno strato intermedio, ma la definizione più utile è quella di 'tecnologia collante': il suo scopo non è esistere tra SO e applicazioni, è integrare applicazioni eterogenee — e questo si capisce solo guardando lo scenario reale dello sviluppo software."*
+
+**Chiusura pronta:** *"Definizione, EAI e paradigma del calcolo eterogeneo distribuito non sono tre temi: sono la stessa cosa vista a tre livelli — il problema (EAI), il suo contesto (heterogeneous distributed computing) e la sua soluzione tecnologica (il middleware con le sue trasparenze)."*
+
 ## Perché importa
 
 Il middleware è il filo conduttore di tutta la seconda parte del corso: RPC/gRPC, MOM/JMS, REST sono tutte istanze concrete di modelli middleware. Capire il quadro generale (sistemi distribuiti → eterogeneità → EAI → trasparenze → tassonomia) permette di collocare ogni tecnologia studiata e di rispondere alle domande d'esame "di cornice".
@@ -120,3 +140,4 @@ Il middleware è il filo conduttore di tutta la seconda parte del corso: RPC/gRP
 - [[13-sistemi-middleware]]
 
 _Aggiornato: 2026-06-19 — pagina creata: estensione MODULO 2 (slide 13), teoria fondante middleware (sistemi distribuiti, EAI, trasparenze, tassonomia, DOM/ORB/IDL/RMI)_
+_Aggiornato: 2026-06-21 — aggiunta sezione "Traccia orale" (conciliazione definizione↔EAI↔heterogeneous distributed computing in 5 passi, trasparenze come rovescio dell'eterogeneità, apertura/chiusura pronte)_
