@@ -23,6 +23,7 @@
 ### OOP
 - [[oop]] — classe, self, __init__, dunder, attributi istanza/classe
 - [[ereditarieta]] — super(), polimorfismo, ABC, isinstance
+- [[polimorfismo]] — nominale (Java, basato sulla classe) vs strutturale/duck typing (Python); override/overload/generics, statico vs dinamico
 
 ### Concorrenza
 - [[concorrenza-parallelismo]] — concorrenza vs parallelismo, multitasking/multithreading, speed-up, legge di Amdahl, competizione/cooperazione/interferenza
@@ -116,7 +117,7 @@ Codice pronto da prova pratica, basato su slide e svolgimenti verificati.
 - [[java-threading]] — Thread/Runnable, start/join/sleep, ciclo di vita, vs Python
 - [[java-sincronizzazione]] — synchronized, monitor, wait/notify, Java 1.5 Lock/Semaphore
 - [[proxy-pattern]] — Proxy-Skeleton, separazione logica applicativa/comunicazione, RPC manuale
-- [[jms]] — JMS API, Abstract Factory, JNDI, administered objects, Session/Producer/Consumer
+- [[jms]] — JMS API, Abstract Factory, JNDI (Context/lookup), modello a 8 passi, sync/async (receive vs MessageListener), struttura messaggio (header/properties/body+selettori SQL-like), acknowledgement, sessioni transacted, thread-safety, persistenza, interop STOMP
 
 ---
 
@@ -134,6 +135,7 @@ Codice pronto da prova pratica, basato su slide e svolgimenti verificati.
 
 ## Esame
 
+- [[percorso-orale]] — percorso di studio per l'orale (7 tappe per prerequisiti) da Domande_ACP_aggiornate.pdf + risposte ai punti non coperti (selfish thread, static synchronized, JMS ReplyTo, GC Java vs Python, gRPC↔MongoDB)
 - [[pattern-esame]] — pattern ricorrenti nelle prove pratiche ACP (architettura, produttore/consumatore, proxy-skeleton, routing)
 
 _per generare domande/riepilogo/mappa: eseguire `esame`_

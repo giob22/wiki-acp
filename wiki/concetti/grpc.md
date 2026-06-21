@@ -38,6 +38,35 @@ L'idea di base di gRPC è **trattare le RPC come riferimenti a oggetti HTTP**, t
 - **streaming bidirezionale nativo**;
 - **compressione dell'intestazione** HTTP per ridurre l'overhead.
 
+#### Gerarchia HTTP/2 in dettaglio (connessione → stream → message → frame)
+
+```
+Connessione (1 sola connessione TCP/TLS)
+   └── Stream      (più stream multiplexati, ognuno con Stream ID univoco)
+        └── Message  (= 1 richiesta o 1 risposta logica)
+             └── Frame  (unità base di trasmissione)
+                  ├── Frame Header (9 byte, in OGNI frame)
+                  └── Payload
+```
+
+- **Connessione**: una sola connessione TCP (di norma su TLS) per client → è ciò che abilita il multiplexing.
+- **Stream**: flusso bidirezionale di byte dentro la connessione, identificato da uno **Stream ID univoco**. Molti stream convivono **interlacciati** (interleaved) sulla stessa connessione; trasporta uno o più messaggi.
+- **Message**: la richiesta/risposta **logica** completa, mappata su uno stream. È una **sequenza di frame**.
+- **Frame**: unità base. Ogni frame = **frame header da 9 byte** + **payload**.
+
+**⚠️ I due significati di "header"** (trappola d'esame — non confonderli):
+
+| Concetto | Cos'è | Dove sta | Binario? |
+|----------|-------|----------|----------|
+| **Frame Header** | prefisso fisso di **9 byte presente in *ogni* frame**: Length (24 bit), Type (8 bit), Flags (8 bit), bit riservato + **Stream Identifier (31 bit)** | nei primi 9 byte di qualsiasi frame | **Sì** |
+| **Header HTTP** (campi `content-type`, `authorization`, ...) | metadati della richiesta/risposta | in frame di tipo `HEADERS` (+ `CONTINUATION` se grandi) | **Sì**, compressi con **HPACK** |
+
+Quindi un **message** non è "un frame header + frame di payload"; è più precisamente: uno o più frame **`HEADERS`** (che portano i campi header HTTP) + zero o più frame **`DATA`** (che portano il body). Ogni frame, sia `HEADERS` che `DATA`, contiene comunque al suo interno il proprio frame header da 9 byte.
+
+**Tutto è binario** in HTTP/2, header inclusi. Gli header HTTP, oltre a essere binari, sono **compressi con HPACK**: tabella statica (header comuni predefiniti) + tabella dinamica (header già visti nella connessione, inviati una volta e poi referenziati per indice) + opzionale codifica di **Huffman** sulle stringhe. È esattamente il vantaggio "header compression" che gRPC eredita da HTTP/2.
+
+> 🎯 Esame: la trappola è confondere il **frame header** (9 byte, in *ogni* frame) con il **frame `HEADERS`** (il tipo di frame che trasporta i campi header HTTP, compressi via HPACK). Sono cose diverse.
+
 **Vantaggi di HTTP/2 su HTTP/1.1** (in sintesi):
 - **Multiplexing**: più richieste/risposte sulla stessa connessione TCP
 - **Header compression**: riduce overhead
@@ -310,3 +339,4 @@ gRPC è uno degli argomenti avanzati del corso — integra RPC, protobuf, HTTP/2
 
 _Aggiornato: 2026-06-19 — estensione MODULO 2 (slide 14): scenari/CNCF, HTTP/2 (binary framing, stream/message/frame, multiplexing), blocking vs non-blocking stub, 4 tipi di RPC call con generators/yield, thread-safety+so_reuseport, aggiornare servizio, errori tipici, limitazioni (gRPC-Web, non human-readable)_
 _Aggiornato: 2026-06-20 — aggiunta glossa alla frase "RPC come riferimenti a oggetti HTTP": chiarito il mapping RPC→risorsa HTTP/2 (path /package.Service/Metodo, POST, stream/frame binari)_
+_Aggiornato: 2026-06-20 — aggiunta sezione "Gerarchia HTTP/2 in dettaglio": connessione→stream→message→frame, distinzione frame header (9 byte) vs frame HEADERS, HPACK (tutto binario)_

@@ -93,7 +93,8 @@ lock.release()
 Firma completa: `acquire(blocking=True, timeout=-1)` → ritorna `True` se acquisito, `False` altrimenti.
 - `blocking=False` → la chiamata non è bloccante, ritorna subito `False` se il lock è già preso
 - `timeout` (float positivo) → attende al massimo `timeout` secondi, poi ritorna `False`
-- `release()` → rilascia (nessun valore di ritorno); `locked()` → ritorna `True` se lo stato è locked
+- `release()` → rilascia (nessun valore di ritorno); 
+- `locked()` → ritorna `True` se lo stato è locked
 
 **`with` e primitive di sincronizzazione** — lo statement `with` acquisisce il lock e lo **rilascia automaticamente** alla fine del blocco:
 ```python

@@ -65,6 +65,7 @@ Tutta la libreria standard Python è OOP. Flask, gRPC, threading, PyMongo — tu
 ## Connessioni
 
 - [[ereditarieta]] — estensione delle classi in Python
+- [[polimorfismo]] — pilastro dell'OOP: duck typing (Python, strutturale) vs nominale (Java)
 - [[eccezioni]] — le eccezioni sono classi che ereditano da `Exception`
 - [[threading]] — `Thread` è una classe da sottoclassare
 

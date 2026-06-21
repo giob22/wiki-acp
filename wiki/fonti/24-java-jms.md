@@ -3,7 +3,7 @@ tipo: fonte
 titolo: "Java Message Service (JMS)"
 data_ingest: 2026-06-04
 formato: slide-pdf
-argomenti: [java, jms, activemq, mom, ptp, pub-sub, connectionfactory, session, jndi, abstract-factory]
+argomenti: [java, jms, activemq, mom, ptp, pub-sub, connectionfactory, session, jndi, abstract-factory, acknowledgement, transazioni, persistenza, message-listener, stomp]
 ---
 
 ## Sommario
@@ -42,6 +42,15 @@ Slide su JMS (Java Message Service). JMS è lo standard Java (JSR 914) per l'acc
     - I client recuperano gli administered objects tramite **JNDI lookup**
 11. **JNDI (Java Naming and Directory Interface)**: naming service — mappa nomi → riferimenti a oggetti
 12. Il programma JMS deve conoscere il nome JNDI e l'interfaccia JMS degli administered objects, **non** i dettagli del provider
+13. **JNDI in dettaglio**: naming service = insieme di binding nome↔oggetto; concetti Name/Binding/Reference/Context; `Context` (bind/rebind/lookup/unbind/rename), `InitialContext`; proprietà `java.naming.factory.initial` e `java.naming.provider.url`; accesso al naming service tramite plugin Service Provider
+14. **Modello di programmazione generico (8 passi)**: lookup CF → lookup Destination → create Connection (+`start()` se consumer) → create Session → create Producer/Consumer → create Message → send/receive → cleanup
+15. **Consumo sincrono vs asincrono**: sincrono = `receive()`/`receive(timeout)`/`receiveNoWait()`; asincrono = `MessageListener` con callback `onMessage`. Entrambi validi per PTP e Pub/Sub
+16. **Struttura messaggio**: Header (`JMSMessageID`, `JMSCorrelationID`, `JMSReplyTo`, `JMSPriority`) + Properties (`<String,value>`, read-only se ricevuti, selettori SQL-like) + Body (5 tipi: `TextMessage`, `MapMessage`, `BytesMessage`, `StreamMessage`, `ObjectMessage`)
+17. **Acknowledgement** (3 fasi: ricevi/processa/ack): `AUTO_ACKNOWLEDGE`, `CLIENT_ACKNOWLEDGE` (ack a livello sessione), `DUPS_OK_ACKNOWLEDGE` (lasco, possibili duplicati)
+18. **Sessioni transacted**: `createSession(true, 0)`, `commit()`/`rollback()`, transazione confinata a una singola sessione
+19. **Concorrenza**: thread-safe solo `Destination`/`ConnectionFactory`/`Connection`; `Session`/`Producer`/`Consumer` no (Session = contesto single-threaded)
+20. **Persistenza**: `PERSISTENT` (default, memoria stabile) vs `NON_PERSISTENT`; via `setDeliveryMode` o parametri di `send`
+21. **Interop JMS↔STOMP**: `content-length` decide Text vs Bytes message; durable in STOMP con coppia `client-id` + `activemq.subscriptionName`; lato STOMP si usa il physical-name
 
 ## Concetti introdotti
 
@@ -51,13 +60,22 @@ Slide su JMS (Java Message Service). JMS è lo standard Java (JSR 914) per l'acc
 
 ## Domande aperte
 
-- Come si scrive concretamente un producer/consumer JMS?
-- Ricezione asincrona con MessageListener?
+- ~~Come si scrive concretamente un producer/consumer JMS?~~ → risolto: modello a 8 passi + esempi PTP/Pub-Sub in [[jms]]
+- ~~Ricezione asincrona con MessageListener?~~ → risolto: `setMessageListener` + `onMessage` in [[jms]]
 
 ## Domande da esame
 
 - Cos'è JMS? Perché è un'API standard?
 - Differenza tra PTP e Pub-Sub in JMS — interfacce coinvolte
 - Cos'è il pattern Abstract Factory? Come si applica a JMS?
-- Cos'è JNDI? Cos'è un administered object?
+- Cos'è JNDI? Cos'è un administered object? Cosa sono Name/Binding/Reference/Context?
 - Quali sono le interfacce JMS principali e il loro ruolo?
+- Quali sono gli 8 passi del modello di programmazione JMS? Dove differiscono sender e receiver? (`start()`)
+- Differenza tra consumo sincrono e asincrono (`receive` vs `MessageListener`/`onMessage`)
+- Com'è strutturato un messaggio JMS? Quali sono i 5 tipi di body? Cosa sono i selettori SQL-like?
+- Le 3 modalità di acknowledgement e le 3 fasi del consumo
+- Cos'è una sessione transacted? Cosa succede su `commit()`/`rollback()` (anche in PTP)?
+- Quali oggetti JMS sono thread-safe e quali no? Perché?
+- `PERSISTENT` vs `NON_PERSISTENT`: cosa garantiscono? Qual è il default?
+- "Conviene attivare transazioni + persistenza + durable tutte insieme?" → no, overhead: solo quando servono
+- Interop JMS↔STOMP: come si decide il tipo di messaggio? Come si fa una durable subscription da STOMP?

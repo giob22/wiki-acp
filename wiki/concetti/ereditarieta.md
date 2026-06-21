@@ -41,6 +41,8 @@ for a in animali:
     print(a.parla())   # → "Bau!" poi "Miao!" — stesso messaggio, risposta diversa
 ```
 
+> 💡 Connessione: qui il polimorfismo passa per l'override e una base comune (`Animale`), ma in Python **non è necessaria una superclasse comune**: per il **duck typing** basta che gli oggetti abbiano il metodo `parla()`. Confronto completo nominale (Java) vs strutturale (Python) → [[polimorfismo]].
+
 **Ereditarietà multipla** (Python supporta, usare con cautela):
 ```python
 class C(A, B):
