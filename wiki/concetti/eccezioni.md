@@ -29,6 +29,7 @@ finally:
 ```
 
 **Eccezioni comuni**:
+
 | Eccezione | Causa |
 |-----------|-------|
 | `ValueError` | Valore non valido per il tipo |

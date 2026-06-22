@@ -62,15 +62,16 @@ s = socket.socket(socket_family, socket_type)
 > 💡 Tutte le funzioni del modulo `socket` sono **wrapper alle syscall** dell'OS (in Linux le socket Berkeley). A `strace` si vedono `socket()/bind()/listen()/accept4()/recvfrom()/sendto()/close()`; la socket aperta è un file descriptor (`/proc/PID/fd/N → socket:[inode]`), stato LISTEN = `0x0A`.
 
 **Funzioni principali**:
-| Funzione | Ruolo |
-|---|---|
-| `socket()` | crea la socket |
-| `bind(address)` | associa la socket a `(IP, porta)` — **porta 0 ⇒ OS sceglie il primo porto libero** |
-| `listen(backlog)` | mette in ascolto (TCP); `backlog` = max connessioni in coda |
-| `accept()` | (TCP) blocca, accetta una connessione → ritorna **`(conn, addr)`** (nuova socket + indirizzo peer) |
-| `connect(address)` | (client) apre connessione verso `(IP, porta)` |
-| `getsockname()` | indirizzo locale della socket (utile con porta 0: `s.getsockname()[1]`) |
-| `close()` | chiude la socket |
+
+| Funzione           | Ruolo                                                                                              |
+| ------------------ | -------------------------------------------------------------------------------------------------- |
+| `socket()`         | crea la socket                                                                                     |
+| `bind(address)`    | associa la socket a `(IP, porta)` — **porta 0 ⇒ OS sceglie il primo porto libero**                 |
+| `listen(backlog)`  | mette in ascolto (TCP); `backlog` = max connessioni in coda                                        |
+| `accept()`         | (TCP) blocca, accetta una connessione → ritorna **`(conn, addr)`** (nuova socket + indirizzo peer) |
+| `connect(address)` | (client) apre connessione verso `(IP, porta)`                                                      |
+| `getsockname()`    | indirizzo locale della socket (utile con porta 0: `s.getsockname()[1]`)                            |
+| `close()`          | chiude la socket                                                                                   |
 
 **Indirizzi speciali**:
 - **`localhost`** → si risolve in `127.0.0.1` (IPv4) o `::1` (IPv6); in `bind()` accetta solo connessioni dalla stessa macchina.

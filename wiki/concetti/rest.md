@@ -32,13 +32,13 @@ I due termini si assomigliano ma indicano cose **diverse**, ed è una distinzion
 
 **Relazione tra i due:** non sono in alternativa, sono **a livelli diversi**. Un web service viene **ospitato/esposto attraverso** un web server: il web server è lo strato di trasporto/ascolto HTTP, il web service è la logica applicativa che gira sopra. In [[flask|Flask]] questo è esplicito: **Werkzeug** fornisce il web server WSGI, mentre le tue **view function + route** costituiscono il web service.
 
-| | Web server | Web service |
-|---|---|---|
-| Cosa fa | Riceve richieste HTTP, restituisce risorse/contenuti | Espone funzionalità invocabili da altri programmi |
-| Client tipico | Browser (renderizza una pagina) | Altro programma/software |
-| Output | Documenti (HTML, file statici, immagini) | Dati strutturati (JSON/XML) o effetti applicativi |
-| Esempi | Apache, Nginx, server di sviluppo Werkzeug | API REST/SOAP, endpoint Flask |
-| Livello | Trasporto/ascolto HTTP | Logica applicativa esposta *sopra* il web server |
+|               | Web server                                           | Web service                                       |
+| ------------- | ---------------------------------------------------- | ------------------------------------------------- |
+| Cosa fa       | Riceve richieste HTTP, restituisce risorse/contenuti | Espone risorse (dati o funzionalità)              |
+| Client tipico | Browser (renderizza una pagina)                      | Altro programma/software                          |
+| Output        | Documenti (HTML, file statici, immagini)             | Dati strutturati (JSON/XML) o effetti applicativi |
+| Esempi        | Apache, Nginx, server di sviluppo Werkzeug           | API REST/SOAP, endpoint Flask                     |
+| Livello       | Trasporto/ascolto HTTP                               | Logica applicativa esposta *sopra* il web server  |
 
 > 🎯 Esame: "Differenza tra web server e web service?" → il web server **serve contenuti** (consegna documenti a un browser); il web service **espone funzioni** invocabili da altri programmi. Il primo è l'infrastruttura, il secondo è ciò che vi gira sopra.
 

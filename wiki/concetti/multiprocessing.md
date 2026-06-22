@@ -117,7 +117,7 @@ Il multiprocessing è la risposta Python al GIL per calcolo parallelo. Comprende
 - [[threading]] — alternativa per I/O-bound; stesse primitive di sincronizzazione (Lock, Condition...)
 - [[processo-thread]] — ogni processo ha il suo PCB e spazio di indirizzamento
 - [[produttore-consumatore]] — la `Queue` di multiprocessing implementa direttamente produttori/consumatori multipli
-- [[concorrenza-parallelismo]] — multiprocessing dà parallelismo reale (limitato da [[legge di Amdahl|concorrenza-parallelismo]])
+- [[concorrenza-parallelismo]] — multiprocessing dà parallelismo reale (limitato dalla [[concorrenza-parallelismo|legge di Amdahl]])
 
 ## Fonti
 

@@ -41,6 +41,7 @@ with open("out.txt", "w") as f:
 ```
 
 **Modalità**:
+
 | Modalità | Significato |
 |----------|-------------|
 | `'r'` | Lettura (default) — errore se non esiste |
