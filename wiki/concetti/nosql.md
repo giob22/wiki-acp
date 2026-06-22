@@ -49,11 +49,24 @@ I database si dividono in due categorie: **Relazionali** (SQL) e **Non-relaziona
 |---|---|---|
 | Schema | Fisso | Flessibile |
 | Scalabilità | Verticale (costosa) | Orizzontale (facile) |
-| ACID | Garantito | BASE (Basically Available, Soft state, Eventual consistency) |
+| ACID | Garantito | Garanzie ACID rilassate (BASE/eventual consistency †) |
 | Relazioni | Chiavi esterne | Documenti embedded / riferimenti |
 | Query | SQL | API specifica (es. MongoDB Query Language) |
 
+† _La fonte dice solo che i NoSQL rinunciano ad "alcune garanzie ACID"; i termini **BASE** ed **eventual consistency** sono nomenclatura standard fuori-fonte, vedi nota TODO sotto._
+
 > 🎯 Esame: Differenza SQL/NoSQL in termini di schema, ACID, scalabilità; tipologie NoSQL con esempi.
+
+### Scalabilità orizzontale e distribuzione su nodi
+
+La scalabilità è uno dei punti su cui SQL e NoSQL divergono di più, ed è trattata dalla fonte sia come **svantaggio dei relazionali** sia come **pro dei non-relazionali**.
+
+- **Relazionali — scalabilità difficile (di fatto verticale)**: per reggere più carico un RDBMS andrebbe **distribuito su server multipli**, ma — testuale dalla fonte — *"gestire le tabelle su differenti server è difficoltoso"*. La via pratica diventa allora prendere server **più potenti e costosi** (scalare verticalmente, "in alto") anziché aggiungere macchine. In più, schema rigido e vincoli forti rendono *"quasi impossibile il loro uso negli scenari big data"*.
+- **Non-relazionali — scalabilità orizzontale facile**: la natura **schema-free** rende facile gestire e memorizzare **grandi volumi di dati**, e — testuale dalla fonte — i dati *"possono essere distribuiti tra differenti nodi per migliorarne l'accessibilità"*. Aggiungere nodi (scalare orizzontalmente, "in larghezza") è semplice perché i documenti sono indipendenti e collection diverse non devono avere relazioni tra loro.
+
+> 💡 Connessione: l'assenza di relazioni obbligatorie tra collection è ciò che **abilita** la distribuzione su nodi — non dovendo fare *join* tra tabelle su server diversi, ogni nodo lavora in modo più autonomo. È il rovescio dello svantaggio NoSQL "aggiornamento dei dati più complesso": si rinuncia alle relazioni gestite dal DB in cambio di distribuibilità.
+
+> ⚠️ Oltre la fonte — TODO: il PDF si **ferma** alla "distribuzione dei dati su differenti nodi". **Non** nomina né descrive i meccanismi concreti con cui ciò avviene — **sharding** (partizionamento orizzontale dei documenti tra nodi) e **replica set** (copie ridondanti per disponibilità/fault-tolerance) — né i modelli di consistenza distribuita (**eventual consistency**, teorema **CAP**, acronimo **BASE**). Sono i termini standard con cui all'orale si spiega *come* e *a che prezzo* si scala orizzontalmente, ma vanno presentati come conoscenza esterna, non come contenuto di questa slide. _Da approfondire con una fonte dedicata se rientra nel programma._
 
 ## Perché importa
 
@@ -70,4 +83,4 @@ Le web application moderne usano frequentemente database NoSQL per scalabilità.
 
 - [[17-nosql-databases]]
 
-_Aggiornato: 2026-06-20 — MODULO 4: aggiunti Database/DBMS, features DBMS, ruolo back-end, schema/keys/entità relazionali, pro/contro estesi_
+_Aggiornato: 2026-06-22 — aggiunta sottosezione "Scalabilità orizzontale e distribuzione su nodi" (strettamente da fonte: distribuzione su nodi, verticale vs orizzontale, difficoltà relazionali); marcati come fuori-fonte (TODO) sharding/replica/eventual-consistency/CAP/BASE_

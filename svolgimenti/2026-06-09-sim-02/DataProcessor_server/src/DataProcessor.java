@@ -10,6 +10,7 @@ public class DataProcessor {
 
         Hashtable<String, String> prop = new Hashtable<>();
 
+
         prop.put("java.naming.factory.initial", "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         prop.put("java.naming.provider.url", "tcp://127.0.0.1:61616");
 
@@ -51,10 +52,10 @@ public class DataProcessor {
 
 
         } catch (NamingException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         } catch (JMSException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
         
