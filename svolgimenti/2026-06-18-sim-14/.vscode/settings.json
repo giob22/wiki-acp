@@ -1,0 +1,17 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/failureaccess-1.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-api-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-core-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-netty-shaded-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-protobuf-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-protobuf-lite-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/grpc-stub-1.73.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/guava-33.4.8-jre.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/javax.annotation-api-1.3.2.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/perfmark-api-0.26.0.jar",
+        "/home/studente/Desktop/acp_materiale/java_grpc/protobuf-java-4.31.1.jar",
+        "/home/studente/Desktop/acp_materiale/apache-activemq-5.16.6/activemq-all-5.16.6.jar"
+    ]
+}

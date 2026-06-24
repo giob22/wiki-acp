@@ -1,0 +1,23 @@
+syntax="proto3";
+
+package monitoraggio_latenze;
+
+
+service MonitoraggioLatenze {
+    rpc stream_ping (stream Ping) returns (PingReply);
+    rpc get_network_status (Empty) returns (Status);
+}
+
+message Ping{
+    int64 latency = 1;
+}
+
+message PingReply {
+    int64 pkt_rcvd = 1;
+}
+
+message Empty {}
+
+message Status {
+    string status = 1;
+}

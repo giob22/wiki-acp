@@ -1,0 +1,20 @@
+syntax="proto3";
+
+package energy_service;
+
+option java_multiple_files = true;
+option java_package = "gRPC.EnergyService";
+
+
+service EnergyService{
+    rpc ReportConsumption (Reading) returns (Ack);
+}
+
+message Reading{
+    string meter_id = 1;
+    float kwg = 2;
+}
+
+message Ack{
+    string status = 1;
+}

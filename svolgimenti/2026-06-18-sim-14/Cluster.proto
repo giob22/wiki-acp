@@ -1,0 +1,29 @@
+syntax="proto3";
+
+package GRPC;
+
+option java_multiple_files = true;
+
+option java_package = "GRPC.Proto";
+
+service Cluster{
+    rpc Deploy (DeployRequest) returns (Ack);
+    rpc StopAll (StopRequest) returns (Ack);
+}
+
+message DeployRequest{
+    int32 id = 1;
+    string name = 2;
+    string type = 3;
+}
+
+message StopRequest {
+    string type = 1;
+}
+
+message Ack {
+    string status = 1;
+}
+
+
+
