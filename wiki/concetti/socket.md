@@ -37,13 +37,13 @@ Un **socket** è un'astrazione software che rappresenta un endpoint di comunicaz
 
 ### TCP vs UDP
 
-| | TCP | UDP |
-|---|---|---|
-| Connessione | Sì (orientato alla connessione: instaura/usa/chiude) | No (**connectionless**) |
-| Affidabilità | **Affidabile** (ritrasmissione) | **Non affidabile** |
-| Ordine | Garantito (elimina duplicati) | Non garantito |
-| Modello | Flusso di byte **full-duplex** | **Datagramma** |
-| Uso | HTTP, gRPC, STOMP | DNS, video streaming |
+|              | TCP                                                                   | UDP                     |
+| ------------ | --------------------------------------------------------------------- | ----------------------- |
+| Connessione  | Sì (orientato alla connessione: instaura/usa/chiude)                  | No (**connectionless**) |
+| Affidabilità | **Affidabile** (ritrasmissione)                                       | **Non affidabile**      |
+| Ordine       | Garantito (elimina duplicati)                                         | Non garantito           |
+| Modello      | Flusso di byte **full-duplex**                                        | **Datagramma**          |
+| Uso          | HTTP dalla versione `1.0` alla `2.0`, gRPC (HTTP/2), STOMP (HTTP/1.1) | DNS, video streaming    |
 
 - **TCP** (Transmission Control Protocol): trasporto affidabile su IP; flusso di byte, full-duplex, preserva l'ordine, ritrasmette i pacchetti persi. *(Costruito sopra IP, che è best-effort.)*
 - **UDP** (User Datagram Protocol): trasporto non affidabile; molto simile a IP ma **distingue tra porte diverse** sullo stesso host; basato sul **datagramma**.
