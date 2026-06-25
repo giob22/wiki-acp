@@ -135,6 +135,7 @@ Codice pronto da prova pratica, basato su slide e svolgimenti verificati.
 
 ## Esame
 
+- [[risposte-domande]] — risposte dettagliate a TUTTE le domande di Domande_ACP_aggiornate.pdf, raggruppate per le 7 sezioni (middleware/JMS/STOMP, gRPC/REST/Flask, concorrenza, Python vs Java, container, socket, database), con link alle pagine di dettaglio
 - [[percorso-orale]] — percorso di studio per l'orale (7 tappe per prerequisiti) da Domande_ACP_aggiornate.pdf + risposte ai punti non coperti (selfish thread, static synchronized, JMS ReplyTo, GC Java vs Python, gRPC↔MongoDB)
 - [[pattern-esame]] — pattern ricorrenti nelle prove pratiche ACP (architettura, produttore/consumatore, proxy-skeleton, routing)
 
