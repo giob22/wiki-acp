@@ -83,6 +83,7 @@ session.unsubscribe("archive-sub"); // rimuove definitivamente la durable
 Un subscriber che si riavvia perde i messaggi pubblicati nel frattempo?
 ?
 Con topic normale sì; con sottoscrizione durabile no (il broker li trattiene). Serve client-id (CONNECT) + subscription name (SUBSCRIBE) + messaggi persistent.
+<!--SR:!2026-06-29,3,250-->
 
 
 > 💡 Connessione: il topic durabile colma la differenza con la coda PTP — la queue dà disaccoppiamento temporale per natura (un consumer), la durable lo dà al pub-sub (N consumer) mantenendo identità per subscriber.
