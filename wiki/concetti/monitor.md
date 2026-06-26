@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [semaforo, oop]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **monitor** è un **costrutto sintattico** che abbina un insieme di **operazioni** a una **struttura dati (risorsa) condivisa** tra processi. È sintatticamente simile al costrutto `class`, ma usato per la **gestione di risorse condivise**: facilita la programmazione concorrente e permette di creare **politiche di accesso**.
@@ -17,6 +19,11 @@ Il **monitor** è un **costrutto sintattico** che abbina un insieme di **operazi
 - **Funzioni membro private** — per uso interno
 
 > 🎯 Esame: le **funzioni pubbliche del monitor sono eseguite in modo mutuamente esclusivo** (un solo processo alla volta). Il monitor garantisce la mutua esclusione *automaticamente*, senza che il programmatore gestisca i lock.
+
+Quale garanzia dà un monitor sulle sue funzioni pubbliche?
+?
+Mutua esclusione automatica: una sola funzione pubblica in esecuzione alla volta, senza che il programmatore gestisca i lock.
+
 
 ### Le due politiche di accesso
 
@@ -55,6 +62,11 @@ Quando Q fa `signal_cond()` per risvegliare P, **entrambi non possono eseguire**
 - **Signal-and-continue** (`wait-and-notify`) — privilegia il **segnalante**: Q **prosegue** mantenendo l'accesso esclusivo; P segnalato **non viene attivato subito** ma spostato nella coda di ingresso
 
 > 🎯 Esame: nella semantica **signal-and-continue** (quella di Python!), tra il risveglio e l'effettiva esecuzione di P la condizione potrebbe essere **invalidata** da un altro processo K. Per questo `wait_cond()` va usata dentro un **`while`** (ri-verifica la condizione), non un `if`. È esattamente il motivo del `while ... cv.wait()` in [[threading]].
+
+Perché in semantica signal-and-continue si usa while (non if) attorno a wait()?
+?
+Tra il risveglio e l'effettiva esecuzione del processo, la condizione può essere invalidata da un altro processo → va ri-verificata con while, non if.
+
 
 - `signal_cond()` risveglia al più **un** processo; `signal_all()` risveglia **tutti** quelli in attesa sulla condition, che andranno nella entry queue e rientreranno uno alla volta (più robusta: i risvegliati ricontrollano la condizione). Corrisponde a `notify()` / `notify_all()` di Python.
 

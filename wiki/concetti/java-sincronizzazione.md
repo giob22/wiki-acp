@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [java-threading, oop]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Java fornisce un meccanismo di sincronizzazione basato sui **mutex** per l'accesso alle sezioni critiche. **Ogni oggetto ha associato un mutex** (monitor intrinseco), che **non** è acceduto direttamente dall'applicazione ma tramite **metodi sincronizzati** o **blocchi sincronizzati** (`synchronized`). Il lock viene acquisito all'ingresso e rilasciato all'uscita — anche in caso di eccezione (automaticamente).
@@ -34,6 +36,11 @@ Anche i metodi statici possono essere `synchronized`: poiché non sono legati ad
 | un metodo **`static synchronized`** + un metodo **d'istanza `synchronized`** | eseguono **in concorrenza** (lock diversi: classe vs istanza) |
 
 > 🎯 Esame: **"comportamento di un metodo `synchronized` e di uno `static synchronized` chiamati contemporaneamente?"** → non si bloccano a vicenda. Ottenere il lock della classe **non influenza** i lock di alcuna istanza della classe: sono due monitor distinti.
+
+Cosa succede se un metodo synchronized e uno static synchronized sono chiamati insieme?
+?
+Non si bloccano a vicenda: il metodo d'istanza prende il lock dell'istanza (this), lo static prende il lock della classe (oggetto Class). Due monitor distinti → concorrenti.
+
 
 ### Blocco sincronizzato
 
@@ -96,11 +103,21 @@ class TestApp {
 ```
 > 🎯 Esame: il punto è passare **lo stesso oggetto `Wrapper`** a tutti i thread, così che i loro blocchi `synchronized(wrapper)` insistano **sullo stesso monitor** e la coppia check+write sia atomica.
 
+Come si rende atomica la coppia check+write con blocchi synchronized?
+?
+Passando lo STESSO oggetto a tutti i thread e racchiudendo check+write in synchronized(oggetto): i blocchi insistono sullo stesso monitor → atomicità della coppia.
+
+
 ### Monitor in Java
 
 Una classe con metodi `synchronized` **è un monitor in Java**. Caratteristica chiave:
 
 > 🎯 Esame: **un monitor Java ha una sola (ed implicita) variabile condition**. Questo è il suo **limite principale**: non si possono distinguere più condizioni di attesa (a differenza dei monitor con più condition variable esplicite → [[monitor]]). Il thread attivo nel monitor può sospendersi con `wait()`, che **rilascia il monitor** e inserisce il thread nel **wait set**; vi rimane finché un altro thread attivo nel monitor non invoca `notify()`/`notifyAll()`.
+
+Qual è il limite principale del monitor Java?
+?
+Ha una sola condition variable implicita (un solo wait set): non distingue più condizioni di attesa. wait() rilascia il monitor e mette il thread nel wait set; notify()/notifyAll() lo risveglia.
+
 
 **Semantica del monitor JVM: "signal and continue"**. Diversamente dalla soluzione di **Hoare** (signal-and-wait), un thread Java che invoca `notify()` **rimane in possesso del monitor e continua la propria esecuzione** nella monitor region. Il thread svegliato non riprende subito: torna a competere per il lock (→ [[monitor]] per le tre semantiche).
 
@@ -146,6 +163,11 @@ latch.await();       // attende fino a count = 0
 latch.countDown();   // decrementa count
 ```
 > 🎯 Esame: **limiti di `synchronized` e come superarli** → con `Lock`/`ReentrantLock`/`Semaphore` (lock interrompibili, `tryAcquire`, fairness, più condition variable). **`Lock` vs `ReentrantLock`**: `Lock` è l'**interfaccia**, `ReentrantLock` è l'**implementazione** rientrante (lo stesso thread può riacquisire il lock che già possiede senza autobloccarsi, come per `synchronized`; → [[threading]] per l'analogo `RLock` Python).
+
+Limiti di synchronized e differenza Lock vs ReentrantLock?
+?
+synchronized: non interrompibile, niente tryAcquire/fairness, una sola condition. Si supera con Lock/ReentrantLock/Semaphore. Lock è l'interfaccia, ReentrantLock l'implementazione rientrante.
+
 
 ## Perché importa
 

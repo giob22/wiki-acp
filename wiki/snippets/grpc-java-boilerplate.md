@@ -4,6 +4,8 @@ tecnologia: grpc
 linguaggio: java
 ---
 
+#flashcards/acp
+
 # Boilerplate — gRPC (Java)
 
 Workflow completo: `.proto` con opzioni Java → compilazione con plugin → server → client. → [[grpc]] [[grpc-java]]
@@ -142,6 +144,11 @@ asyncStub.sendMeasurement(request, new StreamObserver<Ack>() {
 ```
 
 > 🎯 Esame: differenze Java vs Python — i messaggi si costruiscono con il **Builder** (`newBuilder().set...().build()`, immutabili), il `package` del proto **non** è ignorato, la risposta si invia con `onNext()` + `onCompleted()` invece del semplice `return`.
+
+Differenze gRPC Java vs Python nella costruzione di messaggi e risposte?
+?
+Java: messaggi col Builder (newBuilder().set...().build(), immutabili), package del proto NON ignorato, risposta con onNext()+onCompleted(). Python: yield e package ignorato.
+
 
 ## Collegamenti
 

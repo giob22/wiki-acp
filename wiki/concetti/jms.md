@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [mom, pub-sub, oop]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **JMS (Java Message Service)** è lo standard Java (JSR 914) per l'accesso ai sistemi MOM. Definisce un insieme di interfacce (`javax.jms.*`) che i provider MOM devono implementare — il codice JMS funziona con qualsiasi provider compatibile.
@@ -122,6 +124,11 @@ Context jndiContext = new InitialContext(prop);
 
 > 🎯 Esame: l'unica differenza tra sender e receiver nei primi passi è lo **step 3.1** (`start()`): obbligatorio sul lato che riceve, assente sul lato che invia.
 
+Qual è l'unica differenza tra sender e receiver nei primi passi JMS?
+?
+Lo step connection.start(): obbligatorio sul lato che riceve (abilita il delivery), assente sul lato che invia.
+
+
 **Flusso tipico**:
 ```java
 // JNDI lookup degli administered objects
@@ -159,6 +166,11 @@ session.unsubscribe("archive-sub"); // rimuove definitivamente la durable
 Il broker trattiene i messaggi del topic mentre il subscriber è offline e li consegna al reconnect → [[sottoscrizioni-durabili]].
 
 > 🎯 Esame: Struttura interfacce JMS, ruolo JNDI e administered objects, come JMS applica il pattern Abstract Factory. Durable subscriber = `setClientID` + `createDurableSubscriber(topic, nome)`.
+
+Come JMS applica l'Abstract Factory e cos'è un durable subscriber?
+?
+javax.jms.* = interfacce (Abstract Factory + Product), il provider (ActiveMQ) è la ConcreteFactory recuperata via JNDI lookup. Durable subscriber = setClientID + createDurableSubscriber(topic, nome).
+
 
 ## Consumo dei messaggi: sincrono vs asincrono
 
@@ -231,6 +243,11 @@ catch (Exception e) { session.rollback(); }
 - **rollback()** — i messaggi inviati vengono scartati; i messaggi ricevuti tornano disponibili (in PTP rimessi in coda e di nuovo visibili agli altri).
 
 > 🎯 Esame ("conviene attivarli tutti?"): transazioni, persistenza e durable subscription danno **garanzie** ma costano **overhead** (memoria stabile, coordinamento) → si attivano solo quando servono davvero, non per default.
+
+Conviene attivare sempre transazioni, persistenza e durable in JMS?
+?
+No: danno garanzie ma costano overhead (memoria stabile, coordinamento). Si attivano solo quando servono davvero, non per default.
+
 
 ## Concorrenza e thread-safety
 

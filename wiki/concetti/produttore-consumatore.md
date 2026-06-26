@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [semaforo, monitor]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **problema produttore/consumatore** è il problema classico di **cooperazione** tra processi concorrenti. Due categorie di processi condividono una risorsa (buffer):
@@ -22,6 +24,11 @@ Il **problema produttore/consumatore** è il problema classico di **cooperazione
 Pur esistendo un (potenziale) problema di mutua esclusione nell'uso del buffer comune, la soluzione **impone un ordinamento** nelle operazioni dei due processi: produttori e consumatori devono **coordinarsi** per segnalare rispettivamente l'avvenuto **deposito** e **prelievo**. È quindi **cooperazione** (sincronizzazione diretta), non solo competizione.
 
 > 🎯 Esame: è il prototipo della **condition synchronization**: un'operazione (prelievo) va differita finché la risorsa non è in stato appropriato (non vuota).
+
+Di quale problema è prototipo il produttore-consumatore?
+?
+Della condition synchronization: un'operazione (prelievo) va differita finché la risorsa non è in stato appropriato (buffer non vuoto/non pieno).
+
 
 ### Soluzioni
 

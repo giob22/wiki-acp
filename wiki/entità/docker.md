@@ -3,6 +3,8 @@ tipo: entità
 categoria: strumento
 ---
 
+#flashcards/acp
+
 ## Cos'è
 
 **Docker** è un motore di container scritto in **Go**, basato su Linux container, che permette di eseguire applicazioni in container isolati e portabili. Nasce come **dotCloud, Inc.** (2010, fondata da **Solomon Hykes**) → rinominata **Docker Inc.** nel 2013. Il motore open-source è sviluppato dalla comunità sotto il nome **Moby** (github.com/moby/moby). Il payload è incapsulato come container **leggero, portabile, self-sufficient**, manipolabile con operazioni standard ed eseguibile in modo consistente su qualsiasi piattaforma hardware.
@@ -93,6 +95,11 @@ Mettendo insieme i pezzi ([[linux-namespaces]] + OverlayFS + volumi), ecco come 
 - i **volumi** sono cartelle regolari sull'host **bind-mountate** nel container: i dati **sopravvivono** al singolo container e possono essere **condivisi** tra più container.
 
 > 🎯 Esame: collegare i meccanismi — overlay/pivot_root per il filesystem, PID namespace per `/proc`, network namespace per la rete, volumi bind-mount per la persistenza dei dati oltre il ciclo di vita del container.
+
+Quali meccanismi del kernel realizzano un container Docker?
+?
+OverlayFS+pivot_root per il rootfs, mount namespace per il filesystem, PID namespace per /proc, network namespace per la rete, cgroups per le risorse, volumi bind-mount per la persistenza.
+
 
 ## Docker Registry
 

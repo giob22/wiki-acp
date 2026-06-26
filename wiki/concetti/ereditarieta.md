@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [oop]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 L'**ereditarietà** in Python permette a una classe (**figlia**) di estendere un'altra classe (**madre**), ereditandone attributi e metodi. Il **polimorfismo** permette a oggetti di classi diverse di rispondere allo stesso messaggio in modo diverso.
@@ -72,6 +74,11 @@ issubclass(Cane, Animale)  # → True
 ```
 
 > 🎯 Esame: Uso di `super()`, polimorfismo con lista di oggetti, cosa sono le classi astratte.
+
+A cosa serve super() e cosa sono le classi astratte in Python?
+?
+super() accede ai metodi della classe madre senza nominarla. Le classi astratte (abc.ABC + @abstractmethod) impongono alle sottoclassi di implementare certi metodi.
+
 
 ## Perché importa
 

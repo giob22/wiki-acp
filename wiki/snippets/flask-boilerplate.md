@@ -4,6 +4,8 @@ tecnologia: flask
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — Flask (REST API)
 
 Web service RESTful minimo + CRUD completo + gestione errori + client `requests`. → [[rest]] [[flask]]
@@ -135,6 +137,11 @@ abort(resp)
 
 > 🎯 Esame: `abort` solleva `HTTPException` (sottoclasse) → catturabile da `@app.errorhandler(code)` **o** da `@app.errorhandler(HTTPException)` per un handler unico. `description` è accessibile via `e.description` nell'handler.
 
+Cosa solleva abort() in Flask e chi lo cattura?
+?
+Solleva HTTPException (sottoclasse) → catturabile da @app.errorhandler(code) o @app.errorhandler(HTTPException). Il messaggio è in e.description nell'handler.
+
+
 ```python
 from werkzeug.exceptions import HTTPException
 
@@ -190,6 +197,11 @@ requests.delete(f"{BASE}/users/1")
 ```
 
 > 🎯 Esame: mapping CRUD ↔ metodi HTTP (POST=create 201, GET=read, PUT=update, DELETE=delete 204), route dinamiche `<int:id>`, safe/idempotente → [[rest]]. Status code corretti spesso valutati nelle prove.
+
+Mapping CRUD ↔ metodi HTTP con status code tipici?
+?
+POST=create (201), GET=read, PUT=update, DELETE=delete (204). Route dinamiche con <int:id>. GET safe/idempotente, PUT/DELETE idempotenti, POST no.
+
 
 ## Collegamenti
 

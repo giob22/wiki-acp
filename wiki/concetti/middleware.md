@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [socket, processo-thread]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **middleware** è uno strato software interposto tra il sistema operativo e le applicazioni, in grado di fornire le **astrazioni** e i **servizi** utili per lo sviluppo di applicazioni distribuite. Offre ai programmatori librerie di funzioni (**middleware API**, *Application Programming Interface*) il cui scopo è **mascherare l'eterogeneità** dei sistemi su rete. Per questa ragione le piattaforme middleware sono anche dette **software di connettività tra applicazioni** o *glue technologies* (tecnologie collante), a sottolineare il loro ruolo di tecnologie di **integrazione di applicazioni**.
@@ -83,6 +85,11 @@ I middleware si classificano in due grandi famiglie:
 
 > 🎯 Esame: distinguere middleware **orientati ai dati** (RDA, TP) da quelli **orientati alla comunicazione** (RPC, MOM, TS, DOM, CM, WS), saper collocare gRPC (RPC), JMS/ActiveMQ (MOM), RMI/CORBA (DOM).
 
+Come si classificano i middleware e dove si collocano gRPC, JMS, RMI?
+?
+Orientati ai dati (RDA, TP) vs orientati alla comunicazione (RPC, MOM, TS, DOM, CM, WS). gRPC = RPC, JMS/ActiveMQ = MOM, RMI/CORBA = DOM.
+
+
 ### Il modello a oggetti distribuiti (DOM)
 
 Il **modello a oggetti distribuiti** è un'estensione in ambiente distribuito della programmazione ad oggetti. In forma sintetica:
@@ -104,6 +111,11 @@ L'**IDL** rappresenta un **contratto** tra client e server: serve a generare aut
 ## Traccia orale — conciliare definizione, EAI e paradigma generale
 
 > 🎯 Esame: domanda "di cornice" tipica — partire dalla **definizione** di middleware e collegarla al **problema dell'EAI** e allo **scenario odierno** dello sviluppo software (integrare componenti preesistenti) e al **paradigma generale di elaborazione**. Il trucco: non sono tre temi separati, sono **un unico filo** che parte dalla definizione stessa.
+
+Come si lega la definizione di middleware al problema dell'EAI?
+?
+Il middleware è 'tecnologia collante' il cui scopo è integrare applicazioni eterogenee (EAI); definizione, EAI e heterogeneous distributed computing sono lo stesso filo. Le trasparenze sono il rovescio dell'eterogeneità.
+
 
 **Idea portante:** *la definizione di middleware contiene già la risposta all'EAI*; il discorso non fa che srotolarla.
 

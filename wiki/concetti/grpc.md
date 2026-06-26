@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [rpc, protocol-buffers, socket]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **gRPC** è un middleware RPC **universale, ad alte prestazioni e open source** sviluppato da Google e oggi progetto della **Cloud Native Computing Foundation (CNCF)**. Usa **HTTP/2** come trasporto e **Protocol Buffers** come formato di serializzazione e IDL. È un framework **multilinguaggio e multipiattaforma**: può essere eseguito in qualsiasi ambiente. Supporta streaming bidirezionale e interoperabilità tra linguaggi diversi.
@@ -66,6 +68,11 @@ Quindi un **message** non è "un frame header + frame di payload"; è più preci
 **Tutto è binario** in HTTP/2, header inclusi. Gli header HTTP, oltre a essere binari, sono **compressi con HPACK**: tabella statica (header comuni predefiniti) + tabella dinamica (header già visti nella connessione, inviati una volta e poi referenziati per indice) + opzionale codifica di **Huffman** sulle stringhe. È esattamente il vantaggio "header compression" che gRPC eredita da HTTP/2.
 
 > 🎯 Esame: la trappola è confondere il **frame header** (9 byte, in *ogni* frame) con il **frame `HEADERS`** (il tipo di frame che trasporta i campi header HTTP, compressi via HPACK). Sono cose diverse.
+
+Differenza tra frame header e frame HEADERS in HTTP/2?
+?
+Il frame header è l'intestazione di 9 byte presente in OGNI frame (identifica lo stream). Il frame HEADERS è il TIPO di frame che trasporta i campi header HTTP, compressi con HPACK.
+
 
 **Vantaggi di HTTP/2 su HTTP/1.1** (in sintesi):
 - **Multiplexing**: più richieste/risposte sulla stessa connessione TCP
@@ -138,6 +145,11 @@ Quindi un **message** non è "un frame header + frame di payload"; è più preci
 
 > 🎯 Esame: I 4 passi del workflow gRPC, cosa contengono `_pb2.py` e `_pb2_grpc.py`, come funziona una chiamata end-to-end.
 
+Cosa contengono i file _pb2.py e _pb2_grpc.py generati?
+?
+_pb2.py = classi dei messaggi protobuf. _pb2_grpc.py = Stub (proxy client) + Servicer (skeleton server). Generati compilando il .proto con protoc.
+
+
 ### I 4 tipi di RPC call in gRPC
 
 gRPC supporta **quattro tipi** di chiamata, distinti nel `.proto` dalla presenza della keyword `stream` su richiesta e/o risposta. gRPC **garantisce l'ordinamento dei messaggi** all'interno di una singola chiamata RPC.
@@ -189,6 +201,11 @@ for response in stub.SayHello_v3(generate_requests()):
 ```
 
 > 🎯 Esame: riconoscere il tipo di RPC dalla posizione di `stream` nel `.proto`; sapere che server-streaming e bidirectional richiedono `yield` (generator) lato server, mentre client-streaming e bidirectional richiedono un generator/`request_iterator` lato client.
+
+Come si riconoscono i 4 tipi di RPC dal .proto e cosa serve lato server/client?
+?
+La keyword stream su request/response indica lo streaming. Server-streaming e bidirezionale: yield (generator) lato server. Client-streaming e bidirezionale: generator/request_iterator lato client.
+
 
 ### Thread-safety e GIL
 
@@ -311,6 +328,11 @@ try {
 ```
 
 > 🎯 Esame: Differenze Java vs Python nelle API gRPC. Cosa fa `responseObserver.onNext()` + `onCompleted()`. Perché `package` in Java non è ignorato.
+
+Differenze gRPC Java vs Python e ruolo di onNext()/onCompleted()?
+?
+Java: messaggi col Builder, package del proto NON ignorato, risposta streaming con responseObserver.onNext()+onCompleted(). Python: yield e package ignorato.
+
 
 > 💡 Connessione: `StreamObserver` in Java async corrisponde al pattern Observer di [[pub-sub]] — il client si registra come osservatore della risposta.
 

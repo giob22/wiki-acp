@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, linux-namespaces, cgroups]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Un **container** è un'unità di esecuzione leggera e portatile che isola un'applicazione con le sue dipendenze, sfruttando le primitive del kernel host (namespaces e cgroups) invece di emulare hardware e sistema operativo come fanno le Virtual Machine.
@@ -79,6 +81,11 @@ I container **non sono veramente isolati** come le VM: il kernel host condiviso 
 Comprendere i container è fondamentale per capire il deployment moderno di servizi. Tutto il corso culmina nel poter deployare applicazioni (Flask, gRPC, MongoDB) in modo portabile e scalabile, indipendentemente dall'ambiente sottostante.
 
 > 🎯 Esame: La domanda "differenza tra container e VM" è quasi certamente presente. Risposta chiave: no emulazione hardware, no Guest OS, usa namespaces + cgroups del kernel host.
+
+Differenza fondamentale tra container e VM?
+?
+Il container non emula hardware e non ha Guest OS: condivide il kernel host e usa namespaces (isolamento) + cgroups (risorse). La VM virtualizza l'hardware con hypervisor + OS guest completo.
+
 
 ## Connessioni
 

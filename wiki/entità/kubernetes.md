@@ -3,6 +3,8 @@ tipo: entità
 categoria: strumento
 ---
 
+#flashcards/acp
+
 ## Cos'è
 
 **Kubernetes** (K8s) è un sistema open source di orchestrazione di container, basato sul sistema interno di Google chiamato **Borg**. Avviato nel **2014**, è scritto in Go e progettato per deployare, scalare e gestire applicazioni containerizzate in ambienti cloud, bare-metal e ibridi.
@@ -99,6 +101,11 @@ Questo disaccoppiamento permette di sostituire il runtime (da Docker a container
 Le slide presentano Kubernetes a livello introduttivo. Il corso non prevede esercizi pratici su K8s — il focus pratico è su [[docker]] e [[docker-swarm]].
 
 > 🎯 Esame: Conoscere l'architettura a livello alto (Control Plane vs Node, componenti principali) e il concetto di Pod. Il dettaglio di CRI/OCI può essere richiesto come domanda di approfondimento.
+
+Architettura di Kubernetes (Control Plane vs Node) e cos'è un Pod?
+?
+Control Plane: etcd, kube-apiserver, controller-manager, scheduler. Node: kubelet, container runtime, Pod. Il Pod è l'unità minima di deploy: uno o più container che condividono rete e storage.
+
 
 TODO: da espandere con esempi pratici se vengono trattati in futuro.
 

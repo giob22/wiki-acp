@@ -4,11 +4,18 @@ tecnologia: threading
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — Concorrenza su lista / coda condivisa (Python)
 
 Modi per condividere una struttura dati tra thread (o processi) senza race condition. Caso tipico da prova: **produttore/consumatore con buffer limitato** (es. lista size 5). → [[threading]] [[gil]] [[strutture-dati]] [[processo-thread]]
 
 > 🎯 Esame: il GIL **non** rende thread-safe le operazioni composte (`if len(buf) < N: buf.append(x)` sono due bytecode separati → race). Serve sempre sincronizzazione esplicita. → [[gil]]
+
+Il GIL rende thread-safe le operazioni composte?
+?
+No: `if len(buf) < N: buf.append(x)` sono più bytecode separati → race condition. Serve sempre sincronizzazione esplicita (Lock/Condition).
+
 
 ---
 
@@ -118,6 +125,11 @@ class BoundedBuffer:
 > 2. `wait()` rilascia il lock mentre dorme, lo riacquisisce al risveglio.
 > 3. `notify()` sveglia 1 thread, `notify_all()` tutti. Con un solo tipo di attesa per lato basta `notify`; in dubbio `notify_all`.
 
+Tre punti chiave del produttore-consumatore con Condition?
+?
+1) while (non if) attorno a wait() (spurious wakeup + altri thread possono aver consumato la condizione); 2) wait() rilascia il lock mentre dorme e lo riacquisisce al risveglio; 3) notify() sveglia 1 thread, notify_all() tutti.
+
+
 Uso:
 
 ```python
@@ -196,6 +208,11 @@ Per una **lista** condivisa tra processi: `multiprocessing.Manager().list()` (pr
 | Condivisione tra **processi** | `multiprocessing.Queue` / `Manager` |
 
 > 🎯 Esame: se la traccia dice "lista condivisa di dimensione N tra produttori e consumatori" → `Condition` con `while`. Se dice solo "passa dati a un worker pool" → `queue.Queue`.
+
+Come scegliere tra Condition e queue.Queue nelle prove?
+?
+'lista condivisa di dimensione N tra produttori e consumatori' → Condition con while. 'passa dati a un worker pool' → queue.Queue.
+
 
 ## Collegamenti
 

@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, concorrenza-parallelismo]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Un **semaforo** è un **tipo di dato astratto** `s` che incapsula:
@@ -32,6 +34,11 @@ void wait(semaphore s) {            void signal(semaphore s) {
 ```
 
 > 🎯 Esame: il valore del semaforo, se negativo, indica (in modulo) **quanti processi sono in attesa**.
+
+Cosa indica il valore di un semaforo quando è negativo?
+?
+Indica, in modulo, quanti processi/thread sono in attesa (bloccati) sul semaforo.
+
 
 ### Mutua esclusione, risorsa critica, sezione critica
 

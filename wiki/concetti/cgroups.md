@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, linux-namespaces]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 I **Cgroups** (Control Groups) sono un sottosistema del kernel Linux che fornisce un framework generico per la **gestione, il limite e il monitoraggio delle risorse** (CPU, memoria, I/O, rete) assegnate a **gruppi** di processi.
@@ -64,6 +66,11 @@ I cgroup si presentano all'utente come un **filesystem virtuale** montato sotto 
 Senza cgroups, container diversi sullo stesso host potrebbero monopolizzare CPU o memoria, compromettendo l'isolamento prestazionale. I cgroups garantiscono che ogni container rispetti i limiti assegnati e che le risorse siano distribuite in modo controllato.
 
 > 🎯 Esame: Saper spiegare la differenza concettuale tra namespace (isolamento) e cgroups (gestione risorse), e conoscere almeno 3-4 moduli cgroup con la loro funzione.
+
+Differenza tra namespace e cgroups?
+?
+Namespace = isolano la VISIBILITÀ delle risorse, per singolo processo. Cgroups = limitano/contabilizzano il CONSUMO (CPU, memoria, I/O, pids), per gruppo di processi.
+
 
 ## Connessioni
 

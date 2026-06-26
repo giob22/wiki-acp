@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [mom]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **Publish-Subscribe (Pub-Sub)** è un pattern di comunicazione asincrona in cui i **publisher** producono messaggi associati a un **topic** senza conoscere i receiver, e i **subscriber** si iscrivono ai topic di interesse senza conoscere i producer.
@@ -63,6 +65,11 @@ conn.subscribe("/topic/eventi", ...)   # tutti i subscriber ricevono
 **Sistemi event-based**: i sistemi pub-sub distribuiti sono detti **distributed event-based systems** — usati in scenari critici (SESAR per traffico aereo, NASPI per reti elettriche, FSE per sistemi sanitari).
 
 > 🎯 Esame: Differenza Queue vs Topic in ActiveMQ, limitazioni del pattern Observer, cos'è un sistema event-based.
+
+Differenza Queue vs Topic e limite del pattern Observer?
+?
+Queue (PTP): un solo consumer per messaggio. Topic (Pub-Sub): N subscriber. Observer: il subject mantiene la lista degli observer e li notifica direttamente → scarsa scalabilità (risolto dal Notification Service/broker).
+
 
 ## Perché importa
 

@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: []
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 CPython è l'implementazione di riferimento dell'interprete Python (scritto in C). Trasforma il codice sorgente `.py` in **bytecode** (`.pyc`) e lo esegue sulla **Python Virtual Machine (PVM)**.
@@ -30,6 +32,11 @@ file.py  →  [compilatore CPython]  →  bytecode (.pyc)  →  [PVM]  →  esec
 - IronPython (gira su .NET CLR)
 
 > 🎯 Esame: La domanda tipica è "descrivere il ciclo sorgente → bytecode → PVM" e la differenza tra modalità interattiva e script.
+
+Qual è il ciclo di esecuzione di un programma Python in CPython?
+?
+Sorgente .py → compilato in bytecode (.pyc in __pycache__) → eseguito istruzione per istruzione dalla PVM (Python Virtual Machine). Non è codice macchina nativo.
+
 
 ## Perché importa
 

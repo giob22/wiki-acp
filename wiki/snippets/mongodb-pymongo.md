@@ -4,6 +4,8 @@ tecnologia: mongodb
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — MongoDB (PyMongo)
 
 Driver Python per MongoDB: connessione, CRUD, operazioni atomiche, integrazione Flask. → [[nosql]] [[mongodb]]
@@ -134,6 +136,11 @@ def get_readings(location):
 > ⚠️ `ObjectId` non è JSON-serializzabile: `jsonify` fallisce se il documento contiene `_id`. Soluzioni: projection `{"_id": 0}` oppure `str(doc["_id"])`.
 
 > 🎯 Esame: perché `find_one`+`update_one` separati sono sbagliati sotto concorrenza e come `find_one_and_update` delega l'atomicità al DBMS → [[mongodb]].
+
+Perché find_one+update_one separati sono sbagliati sotto concorrenza?
+?
+Aprono una race condition (TOCTOU): tra lettura e scrittura un altro client può modificare il documento. find_one_and_update esegue tutto in un'unica operazione atomica lato server.
+
 
 ## Collegamenti
 

@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 I **Linux Namespaces** sono un meccanismo del kernel Linux che fornisce isolamento delle risorse a livello di processo: ogni processo vede una visione parziale e separata delle risorse di sistema, come se fosse l'unico processo in esecuzione per quella risorsa.
@@ -33,6 +35,11 @@ Un namespace è un **dominio di denominazione** per un certo tipo di risorsa. Pr
 **`setns()`** — permette a un processo di fare il **join** di un namespace esistente (già creato da un altro processo).
 
 > 🎯 Esame — i namespace si **ereditano, non si "hanno"**: un normale processo lanciato da terminale **non** ha un namespace proprio. Con una `fork()` ordinaria il figlio **eredita** i namespace del padre. Risalendo la catena (shell → ... → init, PID 1), tutti i processi normali vivono negli stessi **namespace "root"**, esistenti dall'avvio e contenenti tutte le risorse globali. Un namespace **nuovo** nasce **solo** passando i flag `CLONE_NEWxxx` a `clone()`/`unshare()` — ed è esattamente ciò che fa Docker all'avvio di un container. Formulazione efficace: *«i namespace non sono una proprietà intrinseca del processo, ma un contesto che si eredita»*. (Verificabile: ogni processo espone i propri namespace in `/proc/<pid>/ns/` come link simbolici.)
+
+I namespace si 'hanno' o si ereditano?
+?
+Si ereditano: una fork() ordinaria fa ereditare al figlio i namespace del padre; i processi normali vivono nei namespace 'root'. Uno nuovo nasce solo con i flag CLONE_NEWxxx a clone()/unshare() (ciò che fa Docker).
+
 
 **`ioctl()`** è una system call generica del kernel (input/output control): serve a inviare comandi di controllo a oggetti del kernel che non rientrano nelle normali `read`/`write`. Nel contesto dei namespace è usata per **interrogarli** (tipo, relazioni padre/figlio), operazioni non coperte da `clone`/`setns`/`unshare`.
 
@@ -94,6 +101,11 @@ Global mount namespace
 I namespace sono il **fondamento dell'isolamento** nei container. Senza di essi, tutti i processi condividerebbero lo stesso spazio di nomi PID, la stessa rete, lo stesso filesystem — rendendo impossibile l'isolamento senza un OS guest completo.
 
 > 🎯 Esame: Saper elencare i 6 tipi di namespace e le 3 syscall (`clone`, `unshare`, `setns`) con la differenza tra loro.
+
+Tipi di namespace e syscall di gestione?
+?
+Tipi: mnt, pid, net, ipc, uts, user (+ cgroup). Syscall: clone() (nuovo processo+namespace), unshare() (nuovo namespace al processo corrente), setns() (join a un namespace esistente).
+
 
 > 💡 Connessione: I namespace isolano **per processo**; i [[cgroups]] limitano le risorse **per gruppo** di processi. Insieme costituiscono i due pilastri dei container.
 

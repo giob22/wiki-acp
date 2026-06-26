@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [tipi-scalari, costrutti-controllo]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Le principali strutture dati built-in di Python sono **tuple** (immutabile), **lista** (mutabile ordinata), **dizionario** (mapping chiave-valore), e **set** (insieme non ordinato). Tutte supportano comprehension per costruzione compatta.
@@ -80,6 +82,11 @@ unici = {x % 3 for x in range(10)}
 ```
 
 > 🎯 Esame: Differenza lista/tupla, accesso sicuro dizionario con `.get()`, comprehension syntax.
+
+Differenza lista/tupla e come si accede in sicurezza a un dizionario?
+?
+Lista mutabile [], tupla immutabile (). Accesso sicuro a dict con .get(chiave[, default]) che torna None/default invece di sollevare KeyError.
+
 
 ## Perché importa
 

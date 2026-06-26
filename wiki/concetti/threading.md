@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, gil, oop]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il modulo `threading` di Python fornisce un'**interfaccia di alto livello** per il multi-threading, costruita sopra il modulo di basso livello `_thread` (il cui uso diretto è **deprecato**). Crea thread a livello kernel (KLT). Utile per workload **I/O-bound** (networking, file). Non adatto per CPU-bound a causa del [[gil]].
@@ -59,6 +61,11 @@ t.join()
 - `is_alive()` — ritorna `True` se il thread è ancora vivo. Va usato in combinazione con `join` quando si specifica un timeout: in caso di timeout scaduto, `join` ritorna sempre `None`, quindi serve `is_alive()` per sapere se il thread è ancora attivo
 
 > 🎯 Esame: `join()` **non distrugge** l'oggetto thread. Dopo `join()` l'oggetto esiste ancora: si possono invocare i suoi metodi e leggere i suoi attributi (es. `is_alive()` → `False`).
+
+Cosa succede all'oggetto thread dopo join()?
+?
+join() non distrugge il thread: l'oggetto esiste ancora, se ne possono leggere attributi/metodi (es. is_alive() → False). join() attende solo la terminazione.
+
 
 **Thread daemon**:
 ```python
@@ -154,6 +161,11 @@ local_data.valore = 42   # ogni thread ha la propria copia
 ```
 > 🎯 Esame: senza `threading.local`, una variabile globale condivisa (es. `data['user'] = value`) viene **sovrascritta** in base alla velocità relativa dei thread → **race condition**. Con `threading.local` ogni thread vede solo il proprio dato.
 
+A cosa serve threading.local()?
+?
+Dà a ogni thread una copia privata di un dato. Senza, una variabile globale condivisa viene sovrascritta in base alla velocità relativa dei thread → race condition.
+
+
 **Queue thread-safe** (da modulo `queue`):
 ```python
 from queue import Queue
@@ -163,6 +175,11 @@ item = q.get()   # consumatore — blocca se vuota
 ```
 
 > 🎯 Esame: Come creare un thread, differenza daemon/non-daemon, come usare Lock, perché il threading non scala su CPU-bound.
+
+Differenza tra thread daemon e non-daemon?
+?
+Non-daemon: il processo aspetta la loro fine prima di uscire. Daemon: il processo termina quando restano solo daemon (interrotti bruscamente). Si imposta con t.daemon=True prima di start().
+
 
 ## Perché importa
 

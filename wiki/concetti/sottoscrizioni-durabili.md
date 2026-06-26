@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [pub-sub, mom, activemq]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Una **sottoscrizione durabile** (durable subscription) è una sottoscrizione a un **topic** in cui il broker memorizza i messaggi pubblicati mentre il subscriber è **disconnesso**, e glieli consegna alla riconnessione. Estende il disaccoppiamento temporale (proprio delle code PTP) anche al modello pub-sub.
@@ -77,6 +79,11 @@ session.unsubscribe("archive-sub"); // rimuove definitivamente la durable
 È l'**unico modo** per ottenere insieme i due vantaggi: distribuzione a N subscriber (pub-sub) **e** disaccoppiamento temporale (nessun messaggio perso se un subscriber è giù). Scenario tipico da prova: un subscriber di archiviazione che non deve perdere nessun evento anche se riavviato.
 
 > 🎯 Esame: domanda classica "se il subscriber si riavvia perde i messaggi pubblicati nel frattempo?" → **sì** con topic normale, **no** con sottoscrizione durabile. Serve `client-id` (CONNECT) + subscription name (SUBSCRIBE).
+
+Un subscriber che si riavvia perde i messaggi pubblicati nel frattempo?
+?
+Con topic normale sì; con sottoscrizione durabile no (il broker li trattiene). Serve client-id (CONNECT) + subscription name (SUBSCRIBE) + messaggi persistent.
+
 
 > 💡 Connessione: il topic durabile colma la differenza con la coda PTP — la queue dà disaccoppiamento temporale per natura (un consumer), la durable lo dà al pub-sub (N consumer) mantenendo identità per subscriber.
 

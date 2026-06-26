@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [oop, ereditarieta]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **polimorfismo** è la capacità di oggetti di **tipi diversi** di rispondere allo **stesso messaggio** (stessa chiamata di metodo / stessa interfaccia) in modo **specifico per il proprio tipo**. La domanda chiave che distingue i linguaggi è: **come si decide se un oggetto è "idoneo"** a essere usato dove ci si aspetta un certo comportamento?
@@ -67,6 +69,11 @@ Conseguenze:
 | Interfacce | esplicite (`interface`) | implicite (protocolli); opzionali `ABC`/`Protocol` |
 
 > 🎯 Esame: *"Come funziona il polimorfismo in Python?"* → **duck typing**, polimorfismo **strutturale e dinamico**: conta cosa l'oggetto *sa fare*, non la sua classe. Contrapporlo al **nominale** di Java, **statico**, basato sulla classe e sulle relazioni di ereditarietà dichiarate. Trade-off: il nominale dà sicurezza a compile-time e contratti espliciti; lo strutturale dà flessibilità e codice più generico, al prezzo di errori spostati a runtime.
+
+Come funziona il polimorfismo in Python e in cosa differisce da Java?
+?
+Python: duck typing, strutturale e dinamico — conta cosa l'oggetto sa fare, non la classe (errori a runtime). Java: nominale e statico — conta la classe e le relazioni dichiarate (controlli a compile-time).
+
 
 ## Perché importa
 

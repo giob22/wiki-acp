@@ -4,6 +4,8 @@ importanza_esame: bassa
 prerequisiti: [costrutti-controllo, eccezioni]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il modulo built-in `open()` permette di leggere e scrivere file. Il **context manager** `with` garantisce la chiusura automatica del file anche in caso di eccezione.
@@ -51,6 +53,11 @@ with open("out.txt", "w") as f:
 | `'b'` | Binario (combinare con r/w/a) |
 
 > 🎯 Esame: Perché usare `with` invece di `open/close` espliciti.
+
+Perché usare `with open(...)` invece di open/close espliciti?
+?
+Il context manager with chiude automaticamente il file alla fine del blocco, anche in caso di eccezione → niente file lasciati aperti.
+
 
 ## Perché importa
 

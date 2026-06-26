@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [socket, funzioni]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **RPC (Remote Procedure Call)** è un paradigma di comunicazione tra processi distribuiti che permette a un processo di invocare funzioni su un processo remoto come se fossero locali, nascondendo la comunicazione di rete.
@@ -96,6 +98,11 @@ Nel paradigma RPC possono verificarsi **malfunzionamenti** nella rete o nei sing
 
 > 🎯 Esame: la semantica desiderata (es. *exactly once*) dipende dal trasporto e dai meccanismi di ritrasmissione. Operazioni **idempotenti** tollerano semantiche più deboli (*at least once*) senza effetti collaterali.
 
+Da cosa dipende la semantica RPC e cosa tollerano le operazioni idempotenti?
+?
+Dipende dal trasporto e dai meccanismi di ritrasmissione. Le operazioni idempotenti tollerano semantiche più deboli (at least once) senza effetti collaterali.
+
+
 ### Sun RPC — un'implementazione concreta
 
 L'implementazione di **Sun Microsystems** prevede, su una macchina servente, un **programma** che contiene una o più **procedure** invocabili remotamente:
@@ -119,6 +126,11 @@ Algoritmo del port mapper: ① crea una socket alla porta 111; ② accetta indef
 **Dispatcher** — Trovata la porta, il client chiama il proprio **stub locale**, che contatta lo stub opportuno tramite un componente chiamato **dispatcher**: sul nodo servente il dispatcher **inoltra i messaggi dei clienti agli opportuni stub lato server** (uno per procedura), che a loro volta invocano la procedura reale.
 
 > 🎯 Esame: Descrivere il flusso completo di una chiamata RPC con stub e skeleton, cos'è il marshalling. Spiegare il **binding dinamico** del port mapper Sun RPC (porta 111) e come realizza la trasparenza alla locazione. Elencare le 4 semantiche RPC e collegarle a TCP/UDP.
+
+Come funziona il binding dinamico di Sun RPC e quali sono le 4 semantiche?
+?
+Il server prende una porta dinamica; il port mapper (porta fissa 111) mappa (programma,versione)→porta (trasparenza di locazione). Semantiche: exactly once, at most once, at least once, zero or more (TCP→exactly/at-most; UDP→at-least/zero-or-more).
+
 
 ## Perché importa
 

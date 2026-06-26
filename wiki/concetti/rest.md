@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [socket, rpc]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **REST (Representational State Transfer)** è uno stile architetturale per sistemi distribuiti che espone **risorse** (corrispondono a dati e funzionalità) identificate da **URI** e le manipola tramite un'**interfaccia uniforme** (metodi HTTP). È **stateless**: ogni richiesta è autocontenuta.
@@ -41,6 +43,11 @@ I due termini si assomigliano ma indicano cose **diverse**, ed è una distinzion
 | Livello       | Trasporto/ascolto HTTP                               | Logica applicativa esposta *sopra* il web server  |
 
 > 🎯 Esame: "Differenza tra web server e web service?" → il web server **serve contenuti** (consegna documenti a un browser); il web service **espone funzioni** invocabili da altri programmi. Il primo è l'infrastruttura, il secondo è ciò che vi gira sopra.
+
+Differenza tra web server e web service?
+?
+Web server: serve contenuti/documenti (a un browser) su HTTP — infrastruttura. Web service: espone funzioni/risorse invocabili da altri programmi — logica applicativa sopra il web server.
+
 
 ### Concetti chiave REST
 
@@ -128,6 +135,11 @@ I tag definiscono il **DOM (Document Object Model)**: architettura gerarchica ad
 **OpenAPI Specification** (già Swagger): framework per descrivere, documentare e interagire con API RESTful in formato YAML/JSON. Definisce endpoint, parametri, schemi di richiesta/risposta; genera documentazione (Swagger UI) e **codice stub client/server** in molti linguaggi (Swagger Codegen). Usato spesso con [[flask|Flask]] per prototipazione rapida.
 
 > 🎯 Esame: definire safe e idempotente con esempi, differenza POST/PUT, principi REST (stateless, uniform interface, risorse vs procedure), RPC-style vs RESTful.
+
+Cosa significano safe e idempotente nei metodi HTTP?
+?
+Safe = non altera lo stato (GET). Idempotente = ripetere la richiesta dà lo stesso risultato (GET, PUT, DELETE). POST non è né safe né idempotente.
+
 
 ## Perché importa
 

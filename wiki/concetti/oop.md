@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [funzioni, strutture-dati]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 La **programmazione orientata agli oggetti (OOP)** in Python si basa su classi e oggetti. Una **classe** è un template; un **oggetto** è un'istanza della classe. Python supporta incapsulamento, ereditarietà e polimorfismo.
@@ -57,6 +59,11 @@ self.__attributo   # name mangling → _Classe__attributo
 **`isinstance(obj, Classe)`** — verifica tipo a runtime.
 
 > 🎯 Esame: Differenza attributo di classe vs istanza, ruolo di `self`, metodi dunder.
+
+Differenza tra attributo di classe e di istanza, e ruolo di self?
+?
+Attributo di classe: condiviso tra le istanze. Di istanza: proprio di ogni oggetto (self.x). self è il riferimento all'istanza corrente, primo parametro dei metodi.
+
 
 ## Perché importa
 

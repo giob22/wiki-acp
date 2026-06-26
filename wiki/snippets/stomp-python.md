@@ -4,6 +4,8 @@ tecnologia: stomp
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — STOMP (Python, `stomp.py` + ActiveMQ)
 
 Client Python per ActiveMQ via protocollo STOMP (porta **61613**). Code (`/queue/...`) per PTP, topic (`/topic/...`) per pub-sub. → [[mom]] [[pub-sub]] [[activemq]]
@@ -127,6 +129,11 @@ while True:
 
 > 🎯 Esame: con la durable un riavvio del subscriber NON perde i messaggi pubblicati nel frattempo (a differenza del topic normale). Rimuovere: `UNSUBSCRIBE` con stesso `activemq.subscriptionName` o da console web. Controparte JMS: `createDurableSubscriber` + `setClientID` → [[jms-java]].
 
+Cosa garantisce una sottoscrizione durabile STOMP e come si rimuove?
+?
+Il riavvio del subscriber non perde i messaggi pubblicati nel frattempo (vs topic normale). Si rimuove con UNSUBSCRIBE (stesso activemq.subscriptionName) o da console web. Controparte JMS: createDurableSubscriber + setClientID.
+
+
 ## Destinazioni
 
 | Destinazione | Modello | Comportamento |
@@ -137,6 +144,11 @@ while True:
 > ⚠️ Interoperabilità con JMS: usare `auto_content_length=False` quando si **invia** verso consumer Java JMS, altrimenti il messaggio arriva come `BytesMessage` invece di `TextMessage` e il cast `(TextMessage)` fallisce.
 
 > 🎯 Esame: porta STOMP 61613 vs porta JMS/OpenWire 61616 — stesso broker ActiveMQ, protocolli diversi. Java usa JMS, Python usa STOMP, e possono scambiarsi messaggi sulla stessa destinazione.
+
+Differenza tra porta STOMP e JMS/OpenWire su ActiveMQ?
+?
+STOMP usa la 61613, JMS/OpenWire la 61616 — stesso broker, protocolli diversi. Java usa JMS, Python usa STOMP, e possono scambiarsi messaggi sulla stessa destinazione.
+
 
 ## Collegamenti
 

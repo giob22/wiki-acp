@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [rpc, oop, ereditarieta, socket]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **pattern Proxy-Skeleton** è un design pattern architetturale per sistemi distribuiti che separa la logica applicativa dai meccanismi di comunicazione client-server. È l'implementazione manuale di RPC in Java senza framework.
@@ -66,6 +68,11 @@ String message = "sum#" + s + "#";
 ```
 
 > 🎯 Esame: Struttura Proxy-Skeleton, differenza skeleton per ereditarietà vs delega, schema concettuale della chiamata remota.
+
+Struttura del Proxy-Skeleton e differenza ereditarietà vs delega?
+?
+Proxy (client) serializza/invia; Skeleton (server) deserializza/fa upcall; entrambi implementano l'interfaccia. Ereditarietà: Impl extends Skeleton (accoppiamento forte). Delega: Skeleton ha un delegate (accoppiamento debole).
+
 
 ## Perché importa
 

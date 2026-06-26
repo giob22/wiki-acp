@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [funzioni]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Un **modulo** Python è un file `.py` che contiene funzioni, classi e variabili riutilizzabili. Un **package** è una directory che contiene un file `__init__.py` e può contenere moduli e sotto-package.
@@ -69,6 +71,11 @@ from ..filters import eq    # sotto-package fratello
 **`__path__`**: variabile che controlla dove il package cerca i suoi sottomoduli
 
 > 🎯 Esame: La guard `__name__ == "__main__"` e la struttura dei package.
+
+A cosa serve la guard `if __name__ == "__main__":`?
+?
+Esegue quel blocco solo quando il file è lanciato direttamente come script, non quando è importato come modulo (__name__ vale '__main__' solo nel primo caso).
+
 
 ## Perché importa
 

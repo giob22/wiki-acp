@@ -5,6 +5,8 @@ data: 2026-06-20
 fonte: raw/prove-esame/Domande_ACP_aggiornate.pdf
 ---
 
+#flashcards/acp
+
 # Percorso di studio — Orale ACP
 
 Costruito sulle **domande che il professore fa più spesso all'orale**
@@ -186,6 +188,11 @@ non si blocca mai, quindi monopolizza la CPU.
 > 🎯 Esame: il prof lega "Selfish Thread" alla domanda *"perché serve il multiprocess se ho
 > i thread?"* — un selfish thread mostra che il threading Python non dà parallelismo reale
 > su CPU-bound: i thread si **alternano** (concorrenza), non girano insieme.
+
+Perché il prof lega il 'Selfish Thread' alla domanda 'perché serve il multiprocess se ho i thread?'
+?
+Perché un selfish thread mostra che il threading Python non dà parallelismo reale su CPU-bound: i thread si alternano (concorrenza), non girano insieme → per il CPU-bound serve il multiprocessing (GIL).
+
 
 ## 2. `static synchronized` vs `synchronized` (Tappa 1, Java) — trattazione completa in [[java-sincronizzazione]]
 

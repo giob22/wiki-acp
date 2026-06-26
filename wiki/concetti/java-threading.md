@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, oop, ereditarieta]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Java supporta la programmazione multithread **al livello di linguaggio**. Tipicamente i thread sono implementati a livello di sistema, e richiedono quindi un'interfaccia di programmazione **dipendente dalla piattaforma** su cui girerà il programma (es. in C++ la libreria `pthread`, POSIX Threads Programming, per programmi multithread su piattaforme UNIX). In Java invece le primitive per creare e gestire i thread fanno parte del linguaggio stesso: questo consente di realizzare programmi multithread in maniera **standardizzata e indipendente dalla specifica piattaforma**.
@@ -43,6 +45,11 @@ t.start();
 
 > 🎯 Esame: **perché Java offre due tecniche?** Perché **Java non consente la derivazione (ereditarietà) multipla**. Se la classe utente **non** è già coinvolta in un legame di derivazione → si può usare la soluzione di derivare dalla classe `Thread`. Se la classe utente **è già** coinvolta in un legame di derivazione (estende già un'altra classe, es. `ParentClass`) → si usa la soluzione di implementare l'interfaccia `Runnable`, ridefinendo `run()`.
 
+Perché Java offre due modi per creare un thread (extends Thread vs implements Runnable)?
+?
+Perché Java non ha ereditarietà multipla: se la classe non eredita già da altro → extends Thread; se eredita già da un'altra classe → implements Runnable (override di run()).
+
+
 **Costruttore principale** di `Thread`:
 ```java
 Thread(ThreadGroup group, Runnable target, String name)
@@ -69,6 +76,11 @@ Tradotto in variabili:
 - **NON condivise**: le **variabili locali dei metodi** (vivono nello stack privato del thread).
 
 > 🎯 Esame: "*method area* e *heap* sono condivisi da tutti i thread in esecuzione nella JVM; invece, quando un thread viene creato ottiene un proprio **PC** e **stack**". È il motivo per cui le variabili locali sono thread-safe per costruzione, mentre quelle di istanza e statiche no.
+
+Cosa condividono i thread Java e cosa è privato?
+?
+Condivisi: Method Area e Heap (variabili statiche e di istanza). Privati per thread: PC e JVM Stack (variabili locali, thread-safe per costruzione).
+
 
 ### Metodi principali
 
@@ -129,6 +141,11 @@ New --start()--> Runnable ⟷ Running --stop()/fine run()--> STOP
    - **Thread nativi (1:1)**: ogni thread Java è mappato su un thread dell'OS. È quello che fa la **maggior parte** delle implementazioni moderne (es. HotSpot). In questo caso lo scheduling e il context switch *concreti* sono eseguiti dallo **scheduler del sistema operativo**, non dalla JVM.
 
 > 🎯 Esame: **è proprio la delega all'OS la ragione per cui non ci si può fidare delle priorità.** Nelle implementazioni a thread nativi le priorità JVM sono solo un *suggerimento* per lo scheduler dell'OS e **non servono a garantire la correttezza di un programma**. La mappatura JVM-priority → priorità dell'OS è **dipendente dalla piattaforma** e per giunta **non iniettiva** (più priorità Java collassano sullo stesso livello OS), come mostra la tabella del corso:
+
+Perché in Java le priorità dei thread non sono affidabili?
+?
+Con i thread nativi (1:1) lo scheduling è delegato all'OS: le priorità JVM sono solo un suggerimento e la mappatura JVM→OS è platform-dependent e non iniettiva. Non garantiscono la correttezza.
+
 
 | JVM Priority | Linux (nice value) | Windows Thread Priority |
 |---|---|---|
@@ -241,6 +258,11 @@ for (int i = 0; i < threads.length; i++) {
 All'atto della loro creazione, i thread possono essere raggruppati per mezzo di un **`ThreadGroup`**, così da poterli controllare congiuntamente come se fossero **una singola entità** (struttura ad albero in cui i nodi sono gruppi e thread). Ogni thread appartiene **sempre** a un gruppo; se non specificato, un thread appartiene a un gruppo di default chiamato **`main`**.
 
 > 🎯 Esame: differenza tra i due approcci di creazione e perché (no derivazione multipla); perché `start()` e non `run()`; ciclo di vita e stati; cos'è un selfish thread; cosa condividono i thread (heap/method area) e cosa no (stack/PC); chi schedula davvero (JVM nel modello / OS nell'esecuzione nativa) e perché le priorità non sono affidabili.
+
+Perché si chiama start() e non run(), e cos'è un selfish thread?
+?
+start() alloca il thread nella JVM e fa eseguire run() in un nuovo flusso; chiamare run() lo eseguirebbe nel thread corrente. Selfish thread = thread CPU-bound che non cede mai la CPU (rischio starvation), mitigato con yield().
+
 
 ## Perché importa
 

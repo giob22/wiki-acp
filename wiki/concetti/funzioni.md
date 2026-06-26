@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [costrutti-controllo, tipi-scalari]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Una funzione in Python è un blocco di codice riutilizzabile definito con `def`. In Python le funzioni sono **oggetti di prima classe**: possono essere assegnate a variabili, passate come argomenti e restituite da altre funzioni.
@@ -52,6 +54,11 @@ def outer(x):
 ```
 
 > 🎯 Esame: Differenza tra parametri positional/keyword, cosa restituisce una funzione senza return, funzioni come first-class objects.
+
+Differenza tra parametri positional e keyword, e cosa restituisce una funzione senza return?
+?
+I positional si passano per posizione, i keyword per nome (nome=valore). Senza return (o return nudo) la funzione restituisce None. Le funzioni sono first-class objects.
+
 
 ## Perché importa
 

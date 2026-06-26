@@ -4,6 +4,8 @@ tecnologia: proxy-skeleton
 linguaggio: java
 ---
 
+#flashcards/acp
+
 # Boilerplate — Proxy-Skeleton (Java, Socket TCP)
 
 Implementazione manuale di RPC in Java, variante **skeleton per ereditarietà** (quella richiesta nelle prove). → [[proxy-pattern]]
@@ -276,6 +278,11 @@ public abstract class ServiceSkeleton implements IService {
 
 > 🎯 Esame: TCP→UDP. `DatagramPacket` porta sia i dati sia l'indirizzo; sul server `pkt.getAddress()`/`pkt.getPort()` danno il mittente a cui rispondere. Buffer di ricezione pre-allocato → dati extra scartati se troppo piccolo. Nessuna connessione: una `DatagramSocket` serve tutti i client → [[socket]].
 
+Come cambia il Proxy-Skeleton Java passando da TCP a UDP?
+?
+Si usa DatagramPacket (dati + indirizzo); sul server pkt.getAddress()/getPort() danno il mittente. Buffer pre-allocato (dati extra scartati). Nessuna connessione: una DatagramSocket serve tutti i client.
+
+
 ## Compilazione ed esecuzione
 
 ```bash
@@ -285,6 +292,11 @@ java Client         # terminale 2
 ```
 
 > 🎯 Esame: differenza ereditarietà (ServerImpl `extends` Skeleton, metodo astratto + upcall) vs delega (Skeleton ha un campo `delegate: IService`). Le prove chiedono quasi sempre l'ereditarietà.
+
+Ereditarietà vs delega nello skeleton (cosa chiedono le prove)?
+?
+Ereditarietà: ServerImpl extends Skeleton (metodo astratto + upcall). Delega: lo Skeleton ha un campo delegate: IService. Le prove chiedono quasi sempre l'ereditarietà.
+
 
 > 💡 Marshalling con stream tipizzati (stile slide → [[22-java-networking]]): un `write*` per ogni parametro, e sul server `read*` **nello stesso ordine**. Usa il tipo giusto: `writeUTF`/`readUTF` (String), `writeInt`/`readInt` (int), `writeDouble`/`readDouble` (double), `writeBoolean`/`readBoolean` (boolean — comodo per l'ack). Sempre `flush()` dopo le write. Niente `PrintWriter`/`BufferedReader`.
 

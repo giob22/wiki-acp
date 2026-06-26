@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [rpc]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **Protocol Buffers (protobuf)** è il meccanismo open-source ormai maturo di Google per serializzare dati strutturati. Usa una **rappresentazione binaria** (non testuale come JSON/XML), è **fortemente tipizzato**, e in gRPC svolge un doppio ruolo: **IDL** per definire l'interfaccia del servizio (genera stub client e classi server astratte) e **formato di interscambio** dei messaggi (payload piccoli). È basato sul classico **modello Proxy-Skeleton** (stub e server).
@@ -75,6 +77,11 @@ message ProductID {
 - Richiede compilazione del file `.proto`
 
 > 🎯 Esame: Struttura di un file `.proto` (syntax, package, service, message, field tag), perché i tag sono importanti.
+
+Com'è strutturato un file .proto e perché i field tag sono importanti?
+?
+syntax, package, service (con rpc), message con campi `tipo nome = tag`. Il field tag identifica il campo nel formato binario (non il nome) → compattezza e backward compatibility; non si cambia mai dopo il deploy.
+
 
 ## Perché importa
 

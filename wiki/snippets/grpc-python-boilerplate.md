@@ -4,6 +4,8 @@ tecnologia: grpc
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — gRPC (Python)
 
 Workflow completo: `.proto` → compilazione → server (Servicer) → client (Stub). → [[grpc]] [[grpc-python]]
@@ -156,6 +158,11 @@ def SendBatch(self, request, context):
 
 > 🎯 Esame: `repeated` su scalari usa la classe `RepeatedScalarContainer`, su messaggi `RepeatedCompositeContainer` — quest'ultima ha `.add()`. Un campo `repeated` vuoto è una lista vuota, mai `None`.
 
+Come si gestiscono i campi repeated in gRPC Python?
+?
+Scalari → RepeatedScalarContainer; messaggi → RepeatedCompositeContainer (ha .add()). Un repeated vuoto è una lista vuota, mai None.
+
+
 ## Gestione errori
 
 **Lato server** — segnalare errore tramite context:
@@ -179,6 +186,11 @@ except grpc.RpcError as e:
 ```
 
 > 🎯 Esame: il servicer è lo **skeleton** generato, lo stub è il **proxy** generato — gRPC automatizza ciò che il pattern [[proxy-pattern]] fa a mano. Il `package` nel `.proto` è ignorato da Python (a differenza di Java).
+
+Nel gRPC generato, cos'è il servicer e cos'è lo stub?
+?
+Servicer = skeleton (server), Stub = proxy (client): gRPC automatizza ciò che il Proxy-Skeleton fa a mano. Il package del .proto è ignorato in Python (non in Java).
+
 
 ## Collegamenti
 

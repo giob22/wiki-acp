@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, interprete-python]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **GIL (Global Interpreter Lock)** è un mutex interno a CPython che garantisce che **un solo thread alla volta** esegua bytecode Python — anche su macchine multicore. È uno dei limiti più discussi di CPython.
@@ -48,6 +50,11 @@ CPython gestisce la memoria con reference counting. Senza un lock globale, due t
 - I tentativi passati di rimuovere il GIL fallirono per: calo di performance single-thread, aumento di complessità dell'interprete, necessità di modificare tutte le estensioni C che sfruttano il GIL
 
 > 🎯 Esame: "Cos'è il GIL? Per quali workload il threading Python è utile nonostante il GIL? Perché un'app CPU-bound multithread è più lenta della stessa multiprocess?"
+
+Cos'è il GIL e perché un'app CPU-bound multithread è più lenta della multiprocess?
+?
+Mutex di CPython: un solo thread esegue bytecode alla volta. Threading utile per I/O-bound (GIL rilasciato durante I/O); per CPU-bound serve il multiprocessing (un interprete+GIL per processo → parallelismo reale).
+
 
 ## Perché importa
 

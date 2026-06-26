@@ -3,6 +3,8 @@ tipo: entità
 categoria: framework
 ---
 
+#flashcards/acp
+
 ## Cos'è
 
 **MongoDB** è un DBMS document-oriented open-source. Memorizza i dati come **documenti JSON-like** (internamente BSON) in **collections**. Schema-free: ogni documento può avere campi diversi.
@@ -158,6 +160,11 @@ Parametri chiave: `filter`, `update`/`replacement`, `upsert`, `return_document` 
 | Più documenti/collection devono cambiare insieme con garanzie ACID | sessioni + `start_transaction()` (MongoDB ≥4.0, replica set) |
 
 > 🎯 Esame: perché `find_one`+`update_one` separati sono sbagliati sotto concorrenza, e come `find_one_and_update` risolve il problema delegando l'atomicità al DBMS.
+
+Come risolve MongoDB la race condition read-modify-write?
+?
+find_one+update_one separati = TOCTOU (un altro client modifica tra le due). find_one_and_update esegue lettura+scrittura come unica operazione atomica lato server (lock a livello documento).
+
 
 ## Link ai concetti correlati
 

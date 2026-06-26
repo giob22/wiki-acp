@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [proxy-pattern, multiprocessing, threading, socket, jms, mom, grpc, flask, mongodb]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Insieme di pattern architetturali e implementativi che si ripetono sistematicamente nelle prove pratiche d'esame di ACP. Riconoscerli permette di abbozzare la soluzione nei primi 10 minuti.
@@ -81,6 +83,11 @@ def consumer():
 
 > 🎯 Esame: Se il testo dice "lista" → usare lista+Condition. Se dice "queue process-safe" → `multiprocessing.Queue`.
 
+Nelle prove, come scegliere tra lista+Condition e multiprocessing.Queue?
+?
+Testo dice 'lista (condivisa)' → lista + Condition (con while). Testo dice 'queue process-safe' → multiprocessing.Queue.
+
+
 ---
 
 ### Pattern 4 — Routing messaggi (quasi sempre)
@@ -145,6 +152,11 @@ class ServiceImpl(ServiceSkeleton):
 ```
 
 > 🎯 Esame: "skeleton per ereditarietà" = `ServiceImpl extends ServiceSkeleton`. ServiceImpl NON gestisce la rete — la eredita.
+
+Cosa significa 'skeleton per ereditarietà' nel Proxy-Skeleton?
+?
+ServiceImpl extends ServiceSkeleton: ServiceImpl NON gestisce la rete (la eredita), implementa solo i metodi astratti con la logica.
+
 
 ---
 

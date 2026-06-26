@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [interprete-python]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Un **processo** è un programma in esecuzione — un'entità dinamica con spazio di indirizzamento proprio. Un **thread** è un flusso di esecuzione all'interno di un processo — condivide la memoria con gli altri thread dello stesso processo.
@@ -93,6 +95,11 @@ Il **contesto** salvato include: Program Counter, Stack Pointer, registri genera
 **Modelli di implementazione** (mapping ULT↔KLT): *pure user-level* (tutti gli ULT su un solo processo kernel), *pure kernel-level* (1:1), *combined* (M ULT mappati su N KLT).
 
 > 🎯 Esame: Differenza processo/thread in termini di memoria e overhead, cos'è il PCB, le 3 procedure del context switch e quando avviene, differenza ULT/KLT.
+
+Differenza processo/thread, cos'è il PCB e le fasi del context switch?
+?
+Processo: memoria isolata, pesante, IPC. Thread: memoria condivisa, leggero. PCB = struttura del SO che descrive un processo. Context switch: salvataggio stato → scheduling → ripristino stato. ULT (invisibili al SO) vs KLT (parallelismo reale).
+
 
 ## Perché importa
 

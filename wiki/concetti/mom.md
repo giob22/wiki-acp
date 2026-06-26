@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [rpc, socket]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il **Message-Oriented Middleware (MOM)** è uno strato software che permette la comunicazione **asincrona** tra applicazioni distribuite tramite un **message broker**. Il broker riceve, conserva e consegna messaggi, disaccoppiando sender e receiver nello spazio e nel tempo.
@@ -82,6 +84,11 @@ L'approccio evento-notifica richiama il pattern **Observer**: ① l'observer dic
 - **STOMP** (Simple/Streaming Text Oriented Message Protocol): protocollo **testuale**, semplice, pensato per i MOM; fornisce un formato **wire-level** che consente ai client STOMP di parlare con **qualsiasi broker** che supporti il protocollo.
 
 > 🎯 Esame: Differenza PTP vs Pub-Sub, disaccoppiamento spaziale/temporale, perché MOM rimpiazza RPC per scalabilità/availability, le 4 forme di comunicazione indiretta, AMQP/MQTT/STOMP (binario/leggero-IoT/testuale).
+
+Differenza PTP vs Pub-Sub e perché il MOM rimpiazza l'RPC?
+?
+PTP (queue): un consumer per messaggio. Pub-Sub (topic): N subscriber. Il MOM è asincrono → disaccoppiamento spaziale/temporale, scalabilità e availability. Protocolli: AMQP (binario), MQTT (leggero/IoT), STOMP (testuale).
+
 
 ## Perché importa
 

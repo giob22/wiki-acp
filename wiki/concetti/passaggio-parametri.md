@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [scope, tipi-scalari, strutture-dati]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 In Python i parametri vengono passati **per assegnazione** (call-by-object-reference): la funzione riceve un riferimento all'oggetto — non una copia del valore né un riferimento alla variabile del chiamante. Il comportamento dipende dalla **mutabilità** dell'oggetto.
@@ -56,6 +58,11 @@ print(x)  # → 11
 ```
 
 > 🎯 Esame: Domanda classica — "cosa stampa questo codice?" con lista passata a funzione che la modifica vs che la ribinda.
+
+Cosa cambia se una funzione modifica in-place una lista passata vs se la ribinda?
+?
+Modificarla in-place (.append) cambia l'oggetto originale (riferimento a oggetto mutabile). Ribindarla (lista = [...]) crea un nuovo oggetto locale e NON tocca l'originale.
+
 
 ## Perché importa
 

@@ -4,6 +4,8 @@ importanza_esame: bassa
 prerequisiti: [tipi-scalari]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 I costrutti di controllo del flusso in Python sono `if/elif/else`, `while`, `for`. L'**indentazione** è sintattica (obbligatoria), non estetica — sostituisce le parentesi graffe di C/Java.
@@ -61,6 +63,11 @@ x = "pari" if n % 2 == 0 else "dispari"
 ```
 
 > 🎯 Esame: L'indentazione obbligatoria e la sintassi di range() con 3 argomenti.
+
+Come funziona range() con 3 argomenti e perché l'indentazione è speciale in Python?
+?
+range(start, stop, step) genera da start a stop-1 con passo step. L'indentazione è obbligatoria e definisce i blocchi (al posto delle graffe).
+
 
 ## Perché importa
 

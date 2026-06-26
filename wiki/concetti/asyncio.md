@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [threading, gil, processo-thread]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **asyncio** è il modulo Python per la programmazione **asincrona** basata su **event loop** e **coroutine**. Alternativa a threading e multiprocessing per workload I/O-bound: un singolo thread gestisce N operazioni concorrenti tramite sospensione cooperativa, senza bloccarsi.
@@ -45,6 +47,11 @@ asyncio.run(main())
 Il modello **cooperativo** significa che un task cede il controllo esplicitamente con `await` — nessun preemption da parte dell'OS. Vantaggio: nessuna race condition su strutture dati condivise; svantaggio: un task che non fa mai `await` blocca l'intero event loop.
 
 > 🎯 Esame: asyncio è alternativa single-thread a threading per I/O-bound — nessun problema GIL perché single-threaded; richiede `await` esplicito (cooperativo, non preemptive).
+
+Cos'è asyncio e perché non soffre del GIL?
+?
+Concorrenza single-thread cooperativa per task I/O-bound: nessun parallelismo di thread → nessun problema di GIL. Richiede await esplicito (cooperativo, non preemptive).
+
 
 ## Perché importa
 

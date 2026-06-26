@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread, threading]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Un **socket** è un'astrazione software che rappresenta un endpoint di comunicazione **tra processi** (eventualmente distribuiti su macchine differenti), **basata sulla rete**: fornisce ai processi il meccanismo per accedere alla rete. Nata con **Unix 4.2 BSD (1983)**. Una socket è caratterizzata da **(indirizzo IP, numero di porta)** del nodo e può essere di tipo **TCP** o **UDP**.
@@ -118,6 +120,11 @@ Migliorano l'efficienza creando **più thread/process** per gestire le richieste
   ```
 
 > 🎯 Esame: sequenza server TCP (`bind→listen→accept→recv/send`); differenza TCP/UDP; perché la socket UDP condivisa va letta solo nel main thread; numero di socket TCP (3) vs UDP (2).
+
+Sequenza di un server TCP e numero di socket TCP vs UDP?
+?
+socket→bind→listen→accept→recv/send→close. TCP usa 3 socket (server: ascolto + connessione da accept; client: 1). UDP usa 2 socket; la socket UDP condivisa va letta solo nel main thread.
+
 
 ### Dal socket grezzo al Proxy-Skeleton
 

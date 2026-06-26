@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [processo-thread]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **Concorrenza** e **parallelismo** sono due tecniche per aumentare le prestazioni di un sistema di calcolo, spesso confuse ma distinte:
@@ -11,6 +13,11 @@ prerequisiti: [processo-thread]
 - **Parallelismo** — più attività eseguite **realmente nello stesso istante** su unità di calcolo distinte (CPU/core multipli).
 
 > 🎯 Esame: **concorrenza non significa parallelismo**. Due processi sono concorrenti (su monoprocessore) se la prima operazione di uno comincia prima dell'ultima dell'altro; il parallelismo richiede hardware con più CPU.
+
+Differenza tra concorrenza e parallelismo?
+?
+Concorrenza = esecuzioni che si sovrappongono nel tempo (anche su 1 CPU, time-slicing). Parallelismo = esecuzioni nello stesso istante su CPU/core distinti. La concorrenza non richiede più CPU.
+
 
 ## Spiegazione
 
@@ -43,6 +50,11 @@ $$S = \frac{1}{f + \frac{1-f}{n}}$$
 | n → ∞ | S_max = 1/f | **limite teorico di Amdahl** |
 
 > 🎯 Esame: la legge di Amdahl mostra che **anche poca frazione sequenziale limita drasticamente** lo speed-up. Esempio classico: compilare 3 file (3+2+1 s) e linkare (1 s) = 7 s su 1 CPU; su 3 CPU si compila in parallelo (max 3 s) + link 1 s = 4 s → speed-up 7/4 = **1.75**, pur usando il triplo dei processori.
+
+Cosa afferma la legge di Amdahl?
+?
+S = 1/(f + (1-f)/n) con f frazione sequenziale. Anche una piccola f limita drasticamente lo speed-up; per n→∞, S_max = 1/f.
+
 
 ### Limiti del multithreading
 

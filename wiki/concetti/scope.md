@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [funzioni]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Lo **scope** (ambito) in Python determina la visibilità dei nomi (variabili). Python usa la regola **LEGB**: Local → Enclosing → Global → Built-in. Ogni chiamata di funzione crea un nuovo **frame** (scope locale) indipendente.
@@ -67,6 +69,11 @@ def outer():
 ```
 
 > 🎯 Esame: Il comportamento di `h()` dentro `g()` con variabili locali dallo stesso nome — domanda tipica all'orale.
+
+Come si risolvono variabili locali con lo stesso nome in funzioni annidate?
+?
+Regola LEGB: ogni funzione ha il proprio scope locale; una variabile locale di una funzione non è visibile in un'altra, anche con lo stesso nome. Lookup: Local → Enclosing → Global → Built-in.
+
 
 ## Perché importa
 

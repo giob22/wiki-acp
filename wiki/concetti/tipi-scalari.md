@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [interprete-python]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 I tipi scalari di Python sono tipi di dato che rappresentano un singolo valore atomico: `int`, `float`, `bool`, `NoneType`. In Python **tutto è un oggetto**, inclusi i valori scalari.
@@ -40,6 +42,11 @@ bool(0)         # → False (falsy: 0, None, "", [], {})
 **Operatori logici**: `and`, `or`, `not` — cortocircuito (short-circuit evaluation)
 
 > 🎯 Esame: La differenza tra `/` e `//`, e capire i valori "falsy" sono domande tipiche.
+
+Differenza tra `/` e `//` in Python e quali valori sono 'falsy'?
+?
+`/` è divisione float (5/2=2.5), `//` è divisione intera/floor (5//2=2). Falsy: 0, 0.0, '', [], {}, (), None, False.
+
 
 ## Perché importa
 

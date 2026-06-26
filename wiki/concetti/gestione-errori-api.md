@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [eccezioni, flask, mongodb, grpc, rest]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 La **gestione degli errori in API distribuite** è il processo di tradurre eccezioni interne (driver DB, validazione, logica applicativa) in segnali d'errore **coerenti e standardizzati** verso il client — status HTTP nel caso REST/Flask, `grpc.StatusCode` nel caso gRPC. Una buona gestione mappa ogni categoria di eccezione a un codice ben preciso, invece di far trapelare stack trace o errori generici 500.
@@ -105,6 +107,11 @@ Qui ogni `PyMongoError` (o sottoclasse, es. `DuplicateKeyError`) sollevata in un
 
 > 🎯 Esame: distinguere "ritornare uno status" da "lanciare un'eccezione che produce quello status" — è la chiave per capire quando un errorhandler si attiva.
 
+Quando scatta un @app.errorhandler in Flask?
+?
+Solo quando viene LANCIATA un'eccezione corrispondente (abort() o eccezione interna). NON scatta su `return jsonify(...), 404` (è una risposta normale, nessuna eccezione).
+
+
 ### C. gRPC — gestione errori via `context`
 
 `context` (`grpc.ServicerContext`) è passato a ogni metodo servicer e sostituisce il meccanismo HTTP-status di REST:
@@ -187,6 +194,11 @@ except grpc.RpcError as e:
 - `set_code` + `set_details` → **non interrompe**: serve un `return` esplicito dopo (una response vuota va bene, gRPC la scarta perché il code non è `OK`)
 
 > 🎯 Esame: i metodi di `context` per segnalare errori, il significato dei principali `StatusCode`, e come un client gRPC li intercetta (`grpc.RpcError`, `.code()`, `.details()`).
+
+Come segnala un errore un servicer gRPC e come lo intercetta il client?
+?
+Server: context.set_code/set_details (non interrompe) o context.abort(code, details) (lancia e interrompe). Client: cattura grpc.RpcError e legge e.code() / e.details().
+
 
 ## Perché importa
 

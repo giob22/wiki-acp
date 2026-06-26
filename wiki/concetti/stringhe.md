@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [tipi-scalari]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Le stringhe in Python (`str`) sono sequenze **immutabili** di caratteri Unicode. Ogni operazione su una stringa produce un **nuovo oggetto** — la stringa originale non viene mai modificata.
@@ -54,6 +56,11 @@ for c in "hello":
 **f-string** (Python 3.6+): `f"Valore: {variabile}"` — interpolazione diretta
 
 > 🎯 Esame: Il slicing con step negativo e il concetto di immutabilità sono domande tipiche.
+
+Come funziona lo slicing con step negativo e l'immutabilità delle stringhe?
+?
+s[::-1] inverte la stringa (step -1). Le stringhe sono immutabili: ogni operazione che 'modifica' crea una nuova stringa.
+
 
 ## Perché importa
 

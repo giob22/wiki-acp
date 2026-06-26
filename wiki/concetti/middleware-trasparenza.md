@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [rpc, grpc, mom, jms, protocol-buffers]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 La **trasparenza alla distribuzione** è la proprietà per cui il middleware nasconde la complessità della comunicazione distribuita al codice applicativo. In senso specifico, la **trasparenza dalle implementazioni commerciali** è la capacità di scrivere codice che funziona con qualsiasi provider/implementazione concreta del middleware senza modifiche.
@@ -72,6 +74,11 @@ Il codice client non contiene riferimento al prodotto concreto, solo all'indiriz
 **JMS** è il caso più puro: è una specifica senza alcuna implementazione propria — non esiste un "runtime JMS" autonomo. Tutti gli altri sono spec con impl di riferimento. **ActiveMQ** è l'unico puro prodotto nel corso.
 
 > 🎯 Esame: "Come JMS garantisce trasparenza dal provider?" → Abstract Factory + JNDI lookup; codice dipende solo da `javax.jms.*`. "Come gRPC garantisce interoperabilità tra linguaggi?" → wire format identico per specifica (protobuf su HTTP/2); codice generato da IDL uguale per tutti i linguaggi.
+
+Come JMS garantisce trasparenza dal provider e gRPC l'interoperabilità tra linguaggi?
+?
+JMS: Abstract Factory + JNDI lookup, il codice dipende solo da javax.jms.*. gRPC: wire format identico per specifica (protobuf su HTTP/2) e codice generato dall'IDL uguale per ogni linguaggio.
+
 
 > 💡 Connessione: stub/skeleton di [[rpc]] e Abstract Factory di [[jms]] perseguono lo stesso obiettivo con tecniche diverse — separare codice applicativo dai dettagli di comunicazione. Il risultato è identico: cambio provider = cambio config, non cambio codice.
 

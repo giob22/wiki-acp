@@ -4,11 +4,18 @@ tecnologia: jms
 linguaggio: java
 ---
 
+#flashcards/acp
+
 # Boilerplate — JMS (Java + ActiveMQ)
 
 API JMS (`javax.jms.*`) verso ActiveMQ su porta **61616** (OpenWire). Bootstrap **sempre via JNDI**: la `ConnectionFactory` e le `Destination` sono **administered objects** recuperati dal servizio di naming (`InitialContext.lookup`), mai costruiti direttamente. → [[jms]] [[mom]]
 
 > 🎯 Esame: **non** usare `new ActiveMQConnectionFactory(...)` né `session.createQueue/createTopic(...)`. Tutto passa per il naming JNDI: `lookup("QueueConnectionFactory")`, `lookup("nome-coda")`. Il provider concreto (ActiveMQ) resta nascosto dietro le interfacce `javax.jms.*` → pattern **Abstract Factory**.
+
+Perché in JMS non si usa new ActiveMQConnectionFactory(...) direttamente?
+?
+Tutto passa per il naming JNDI (lookup di ConnectionFactory e destinazioni): il provider concreto (ActiveMQ) resta nascosto dietro le interfacce javax.jms.* → pattern Abstract Factory.
+
 
 ## Classpath
 
@@ -215,9 +222,19 @@ connection.start();
 
 > 🎯 Esame: `setClientID` va chiamato PRIMA di `connection.start()`. `(client-id, nome-subscription)` identifica la durable: il broker trattiene i messaggi mentre il subscriber è giù → [[sottoscrizioni-durabili]]. Controparte STOMP: `client-id` + `activemq.subscriptionName` → [[stomp-python]].
 
+Quando va chiamato setClientID e cosa identifica la durable?
+?
+setClientID PRIMA di connection.start(). La coppia (client-id, nome-subscription) identifica la durable: il broker trattiene i messaggi mentre il subscriber è giù. Controparte STOMP: client-id + activemq.subscriptionName.
+
+
 > ⚠️ Errori classici: costruire la factory con `new ActiveMQConnectionFactory(...)` invece del `lookup` JNDI (richiesto il servizio di naming); dimenticare `connection.start()` (il consumer non riceve nulla, senza errori); terminare il main del consumer asincrono (il listener muore col processo); cast `(TextMessage)` che fallisce se il producer STOMP non usa `auto_content_length=False` → [[stomp-python]].
 
 > 🎯 Esame: `start()` serve solo a ricevere; Session è single-threaded; AUTO_ACKNOWLEDGE; tabella interfacce generali vs PTP vs Pub-Sub → [[jms]].
+
+A cosa serve start() in JMS e che caratteristica ha la Session?
+?
+start() serve solo a ricevere (abilita il delivery al consumer). La Session è single-threaded. Modalità tipica AUTO_ACKNOWLEDGE.
+
 
 ## Collegamenti
 

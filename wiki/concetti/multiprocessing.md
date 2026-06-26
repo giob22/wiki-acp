@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [processo-thread, gil]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Il modulo `multiprocessing` di Python crea processi separati — ognuno con il suo interprete Python e il suo GIL — consentendo **vero parallelismo** su macchine multicore. È la soluzione per workload CPU-bound.
@@ -106,6 +108,11 @@ Fork del modulo `multiprocessing` (**supporta i notebook Jupyter**). Estende `mu
 | Comunicazione | Variabili condivise | Queue, Pipe |
 
 > 🎯 Esame: "Quando usare multiprocessing invece di threading? Perché?"
+
+Quando usare multiprocessing invece di threading e perché?
+?
+Per task CPU-bound: ogni processo ha il proprio interprete e GIL → parallelismo reale sui core. Il threading è limitato dal GIL e va bene solo per I/O-bound.
+
 
 ## Perché importa
 

@@ -4,6 +4,8 @@ importanza_esame: media
 prerequisiti: [funzioni, tipi-scalari]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 Le **eccezioni** sono il meccanismo di gestione degli errori runtime in Python. Invece di restituire codici di errore, Python lancia (raise) oggetti eccezione che interrompono il flusso normale e possono essere catturati (catch) da blocchi `except`.
@@ -71,6 +73,11 @@ BaseException
 `except Exception` cattura tutto tranne `SystemExit`, `KeyboardInterrupt`, `GeneratorExit`.
 
 > 🎯 Esame: La differenza tra `else` e `finally`, e come creare eccezioni custom.
+
+Differenza tra else e finally in try/except, e come si crea un'eccezione custom?
+?
+else: eseguito solo se NON c'è stata eccezione nel try. finally: eseguito SEMPRE (cleanup). Eccezione custom: sottoclasse di Exception, lanciata con raise.
+
 
 ## Perché importa
 

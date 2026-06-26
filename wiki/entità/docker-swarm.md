@@ -3,6 +3,8 @@ tipo: entità
 categoria: strumento
 ---
 
+#flashcards/acp
+
 ## Cos'è
 
 **Docker Swarm** è il sistema di orchestrazione cluster nativo integrato nel Docker Engine. Permette di gestire un insieme di istanze Docker come un'unica unità, distribuendo automaticamente i container sui nodi disponibili e garantendo la disponibilità dei servizi.
@@ -60,6 +62,11 @@ La maggioranza serve a evitare lo **split-brain**: se il cluster si spezzasse in
 Caso limite (swarm a singolo manager che si guasta): i servizi continuano a girare, ma il controllo è perso ed è necessario **creare un nuovo cluster** per ripristinarlo.
 
 > 🎯 Esame: i manager si tengono sempre in numero **dispari** (3, 5, 7). Passare da 3 a 4 non aumenta la tolleranza (resta 1 fallimento), aggiunge solo un nodo da coordinare.
+
+Perché i manager Swarm si tengono in numero dispari?
+?
+Per il quorum Raft (N/2)+1 che evita lo split-brain. 3→1, 5→2, 7→3 fallimenti tollerati; passare da 3 a 4 non aumenta la tolleranza.
+
 
 ### Guasto dei worker → reschedule
 

@@ -4,6 +4,8 @@ tecnologia: proxy-skeleton
 linguaggio: python
 ---
 
+#flashcards/acp
+
 # Boilerplate — Proxy-Skeleton (Python, Socket TCP)
 
 Implementazione manuale di RPC: il client usa l'interfaccia tramite il Proxy, il server estende lo Skeleton (variante per ereditarietà). → [[proxy-pattern]]
@@ -148,6 +150,11 @@ Se `send_reading` tocca stato condiviso, proteggerlo con `Lock` → [[threading]
 
 > 🎯 Esame: lo skeleton riceve byte, deserializza, fa upcall al metodo astratto implementato dalla sottoclasse. Il proxy fa l'inverso. Entrambi implementano la stessa interfaccia.
 
+Cosa fanno skeleton e proxy nel pattern (Python)?
+?
+Lo skeleton riceve byte, deserializza e fa upcall al metodo astratto implementato dalla sottoclasse; il proxy fa l'inverso (serializza e invia). Entrambi implementano la stessa interfaccia.
+
+
 ## Variante: trasporto UDP
 
 Stessa architettura Proxy/Skeleton, ma socket `SOCK_DGRAM` invece di `SOCK_STREAM`. UDP è **connectionless**: niente `connect`/`listen`/`accept`, si usano `sendto`/`recvfrom`. Stessa `IService`.
@@ -216,6 +223,11 @@ class ServiceSkeleton(IService, ABC):
 `server_impl.py` e `client.py` restano identici alla variante TCP: il transport è incapsulato in proxy e skeleton.
 
 > 🎯 Esame: differenze TCP→UDP. Client: `sendto(dati, addr)` + `recvfrom`. Server: solo `bind`, poi loop `recvfrom`/`sendto`; nessuna connessione persistente, una socket sola serve tutti i client. UDP non garantisce consegna né ordine → [[socket]].
+
+Differenze TCP→UDP nel Proxy-Skeleton Python?
+?
+UDP — Client: sendto(dati, addr) + recvfrom. Server: solo bind, poi loop recvfrom/sendto; nessuna connessione persistente, una sola socket serve tutti i client. UDP non garantisce consegna né ordine.
+
 
 ## Collegamenti
 

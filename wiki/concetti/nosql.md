@@ -4,6 +4,8 @@ importanza_esame: alta
 prerequisiti: [strutture-dati, rest]
 ---
 
+#flashcards/acp
+
 ## Definizione
 
 **NoSQL** (Not Only SQL) indica database non-relazionali che usano modelli di dati flessibili, senza schema fisso. Ottimizzati per grandi volumi di dati e scalabilità orizzontale, a scapito di alcune garanzie ACID.
@@ -56,6 +58,11 @@ I database si dividono in due categorie: **Relazionali** (SQL) e **Non-relaziona
 † _La fonte dice solo che i NoSQL rinunciano ad "alcune garanzie ACID"; i termini **BASE** ed **eventual consistency** sono nomenclatura standard fuori-fonte, vedi nota TODO sotto._
 
 > 🎯 Esame: Differenza SQL/NoSQL in termini di schema, ACID, scalabilità; tipologie NoSQL con esempi.
+
+Differenze SQL vs NoSQL e tipologie NoSQL?
+?
+SQL: schema fisso, ACID, scalabilità verticale. NoSQL: schema-free, ACID rilassato, scalabilità orizzontale. Tipi: Key-Value (Redis), Document (MongoDB), Column (Cassandra), Graph (Neo4j), Search (Elasticsearch).
+
 
 ### Scalabilità orizzontale e distribuzione su nodi
 
